@@ -1,0 +1,72 @@
+<!-- Design a webpage that demonstrates the different display properties in CSS (block, inline, inline-block, and none). Create four buttons or div elements and apply each display property to one of them. Use appropriate styling to make their behavior clearly visible.
+
+Requirements:
+Create four elements with unique IDs or classes (block-element, inline-element, inline-block-element, hidden-element).
+Style each element to display its respective property:
+block: Full-width, with a distinct border.
+inline: Inline text or an icon, styled with a colored background.
+inline-block: A small box with set dimensions and spacing.
+none: Should be invisible but toggleable via a button (JavaScript is optional for this step).
+Add a simple paragraph or text to observe the behavior of each display type.
+Expected Output: A webpage showing the differences between block, inline, and inline-block. Optionally toggle the visibility of the none element.-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .section{
+        margin-bottom: 30px;
+    }
+    body{
+        font-family: Arial, Helvetica, sans-serif;
+        padding: 20px;
+    }
+    .block-element{
+        display: block;
+        width: 100%;
+        border:2px solid #007;
+        padding: 10px;
+        background-color: #e7f1ff;
+        margin-bottom: 10px;
+    }
+    .inline-element{
+      display: inline;
+        border:2px solid #007;
+        padding: 10px;
+        background-color: #e7f1ff;
+        margin-bottom: 10px;  
+    }
+     .inline-block-element{
+      display: inline-block;
+        border:2px solid #007;
+        padding: 10px;
+        background-color: #e7f1ff;
+        margin-bottom: 10px;  
+    }
+</style>
+<body>
+    <h1>Display properties </h1>
+    <div class="section">
+    <div class="block-element">Block element (full-width)</div>
+    <p>Text appears after the block element.</p>
+  </div>
+   
+    <div class='section'>
+        <div class="inline-element">Inline element </div>
+        <p>Inline element flow inline with text</p>
+    </div>
+   
+    <div class="section">
+        <div class="inline-block-element">Inline block element </div>
+        <p>Inline element appear without breaking the flow</p>
+    </div>
+    
+
+
+    
+</body>
+</html>
