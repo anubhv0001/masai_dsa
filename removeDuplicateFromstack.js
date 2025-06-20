@@ -1,22 +1,32 @@
-function maximumSum(arr,n,k){
-  let windowSum=0;
-  for (let i=0;i<k;i++){
-    windowSum+=arr[i];
+function duplicateRemoval(len,str){
+  let st=[];
+  for (let i=0;i<str.length;i++){
+    if (st.length==0){
+      st.push(str[i])
+    }
+    else{
+      if (st[st.length-1]==str[i]){
+        st.pop();
+      }
+      else{
+        st.push(str[i]);
+      }
+    }
   }
-  let maxSum=windowSum;
-  for (let i=k;i<arr.length;i++){
-    windowSum=windowSum-arr[i-k]+arr[i];
-    maxSum=Math.max(windowSum,maxSum)
-  }
-  console.log(maxSum);
+  console.log(st.join(''));
 }
 function runProgram(input) {
   // Write code here
- input=input.split('\n');
- let [n,k]=input[0].split(' ').map(Number);
- let arr=input[1].split(' ').map(Number)
- maximumSum(arr,n,k);
- 
+   input = input.trim().split("\n");
+  let t=parseInt(input[0]);
+  let line=1;
+  for (let i=0;i<t;i++){
+    let len=parseInt(input[line]);
+    let str=input[line+1];
+    duplicateRemoval(len,str);
+    line+=2
+  }
+
 }
 if (process.env.USER === "") {
   runProgram(``);
