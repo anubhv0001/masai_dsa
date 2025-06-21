@@ -1,0 +1,44 @@
+<!--Create a simple web page with the following features:
+
+A button labeled "Add Paragraph" that adds a new paragraph to a div each time it is clicked. The paragraph should display the text:
+ "This is a new paragraph."
+A button labeled "Remove Last Paragraph" that removes the last paragraph added to the div.
+Ensure that the solution uses createElement, appendChild, and removeChild for DOM manipulation.-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <p>Paragraph manager</p>
+    <button id="addbtn">Add paragraph</button>
+    <button id="removebtn">Remove Paragraph</button>
+
+    <div id="container"></div>
+
+    <script>
+        const container=document.getElementById("container")
+         const addBtn=document.getElementById("addbtn")
+          const removeBtn=document.getElementById("removebtn")
+
+          addBtn.addEventListener("click",()=>{
+            const p=document.createElement('p');
+            p.textContent="This is new paragraph"
+            container.appendChild(p);
+          })
+          removeBtn.addEventListener("click",()=>{
+            const lastParagraph=container.lastElementChild;
+            if (lastParagraph){
+                container.removeChild(lastParagraph)
+            }
+            else{
+                alert("No paragraphs to remove")
+            }
+          })
+    </script>
+</body>
+
+</html>
