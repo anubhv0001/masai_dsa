@@ -1,0 +1,96 @@
+<!--Use the FakestoreAPI to fetch a list of products and display them in a grid layout using HTML, CSS, and JavaScript.
+
+The data should be fetched from https://fakestoreapi.com/products.
+Display the products in a grid, showing the product's title, price, and image.
+Add conditional styling to display products with a price over $50 with a yellow border and those with a price of $50 or less with a green border.
+Example:
+fetch('https://fakestoreapi.com/products')
+  .then(response => response.json())
+  .then(data => {
+    // Iterate over the fetched data and display in the grid
+  });-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body{
+        font-family: 20px;
+        margin: 20px;
+        background-color: #f8f8f8;
+    }
+    h1{
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    .grid{
+        display: grid;
+        grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+        gap:20px
+    }
+        .product-card {
+      background-color: #fff;
+      padding: 15px;
+      border: 3px solid;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .product-card img {
+      width: 100px;
+      height: 150px;
+      object-fit: contain;
+      margin-bottom: 10px;
+    }
+    .green-border {
+      border-color: green;
+    }
+
+    .yellow-border {
+      border-color: goldenrod;
+    }
+
+</style>
+<body>
+<h1>Fake product grid</h1>
+<div class="grid"id="productGrid"></div>
+
+<script>
+    fetch('https://fakestoreapi.com/products')
+    .then(response=>response.json())
+    .then(data=>{
+        const grid=document.getElementById('productGrid')
+
+        data.forEach(product => {
+            const card=document.createElement('div')
+            card.className='product-card';
+
+            if (product.price>50){
+                card.classList.add('yellow-border')
+            }
+            else{
+                card.classList.add('green-border')
+            }
+            card.innerHTML=`
+            <img src="${product.image}"alt="${product.title}">
+            <h3>${product.title}</h3>
+            <p>${product.price}</p>
+            `;
+            grid.appendChild(card)
+            
+        });
+    })
+    .catch(error=>{
+        console.log(error)
+    })
+</script>
+
+
+    
+</body>
+</html>
