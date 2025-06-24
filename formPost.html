@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<title>Post Creator</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+      background: #f9f9f9;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    input, textarea, button {
+      padding: 10px;
+      font-size: 1rem;
+    }
+    .response {
+      padding: 15px;
+      background: #e0ffe0;
+      border: 1px solid #00b300;
+      border-radius: 5px;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+<body>
+    <h2>Create a post</h2>
+    <form id="postform">
+    <input type="text"id="title"placeholder="Title">
+    <textarea id="body"rows="4"placeholder='Body'></textarea>
+    <button type="submit">Submit</button>
+    <p id="error"class="error"></p>
+    <div id="responseContainer"></div>
+    </form>
+    <script>
+        const form=document.getElementById('postForm')
+        const responseContainer=document.getElementById('responseContainer');
+        const errorText = document.getElementById('error');
+
+        forn.addEventListener('submit',async(e)=>{
+            e.preventDefault();
+            const title=document.getElementById('title').value.trim();
+              const body = document.getElementById('body').value.trim();
+
+              if (!title||body){
+                errorText.textContent="Both title and body are required";
+                return;
+
+              }
+              errorText.textContent="";
+
+              const postData={title,body}
+              try{
+                const res=await fetch('https://jsonplaceholder.typicode.com/posts',{
+                    method:'POST',
+                    headers:{
+                        'Content-Type':'application/json'
+                    }
+                    body:JSON.stringify(postData)
+                })
+                const data=await res.json();
+                 responseContainer.innerHTML = `
+      <div class="response">
+        <h3>Post Created!</h3>
+        <p><strong>ID:</strong> ${data.id}</p>
+        <p><strong>Title:</strong> ${data.title}</p>
+        <p><strong>Body:</strong> ${data.body}</p>
+      </div>
+    `;
+
+    form.reset();
+              }
+              catch (err) {
+    responseContainer.innerHTML = `<p class="error">Error: ${err.message}</p>`;
+  }
+        })
+    </script>
+</body>
+</html>
