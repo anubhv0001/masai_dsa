@@ -1,0 +1,113 @@
+<!--
+Problem Statement:
+Create a User Registration Page where users can sign up. The details should be submitted to the backend using a POST request.
+
+API Details:
+POST https://mockapi.io/users
+Content-Type: application/json
+Body: { "name": "John Doe", "email": "john@example.com", "password": "123456" }
+
+Requirements:
+Create an HTML form with:
+Name, Email, Password input fields.
+A "Register" button.
+A section to show success/failure messages.
+On form submission:
+Validate that all fields are filled.
+Send the form data to the API via a POST request.
+Show a success message if registration is successful.
+Handle API errors (e.g., email already exists).
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body{
+        font-family: Arial, Helvetica, sans-serif;
+        padding: 30px;
+        background-color: #f0f4f8;
+    }
+    form{
+        max-width: 400px;
+        margin: auto;
+        background:#fff;
+        padding: 25px;
+        border-radius: 8px;
+
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 12px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+     button {
+      width: 100%;
+      padding: 10px;
+      background: #007bff;
+      color: #fff;
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+</style>
+<body>
+    <form id="registration">
+        <h2>Registration page</h2>
+        <input type="text"id="name"placeholder="Full name" required/>
+           <input type="text"id="email"placeholder="Email" required/>
+              <input type="password"id="password"placeholder="Password" required/>
+              <button type="submit">Register</button>
+              <div id="message"></div>
+    </form>
+    <script>
+        const form=document.getElementById("registration");
+        const messageDiv=document.getElementById("message")
+
+        form.addEventListener('submit',async function(e) {
+         e.preventDefault()
+            const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+       messageDiv.textContent = '';
+      messageDiv.className = '';
+      if (!name||!email||!password){
+        messageDiv.textContent='Please fill all fields'
+        messageDiv.className='error'
+        return;
+      }
+      const userData={name,email,password}
+
+      try{
+        const response=await fetch("https://mockapi.io/users",{
+            method:'POST',
+            headers:{
+                 'Content-Type': 'application/json',
+            },
+            body:JSON.stringify(userData),
+        });
+         if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Registration failed');
+        }
+        const data=await response.json();
+        messageDiv.textContent='Registration successfull'
+        messageDiv.className='success'
+        form.reset();
+      }
+      catch(err){
+         messageDiv.textContent = error.message || 'Something went wrong!';
+        messageDiv.className = 'error';
+      }
+
+        })
+    </script>
+</body>
+</html>
