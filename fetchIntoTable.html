@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body{
+        font-family: Arial, Helvetica, sans-serif;
+        padding: 30px;
+        background-color: aqua;
+
+    }
+      table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+</style>
+<body>
+   <h2>User list from firebase</h2>
+   <div id="error"></div>
+   
+   <table id="usertable">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody id="userbody">
+
+    </tbody>
+
+   </table>
+   <script>
+    const userBody = document.getElementById('userBody');
+    const errorDiv = document.getElementById('error');
+    const firebaseUrl=
+     async function fetchUsers() {
+      try {
+        const response = await fetch(firebaseUrl);
+        if (!response.ok) {
+          throw new Error('Failed to fetch users from Firebase');
+        }
+
+        const data = await response.json();
+
+        if (!data) {
+          errorDiv.textContent = 'No users found in the database.';
+          return;
+        }
+        Object.values(data).forEach(user => {
+          const row = document.createElement('tr');
+          row.innerHTML = `<td>${user.name}</td><td>${user.email}</td>`;
+          userBody.appendChild(row);
+        });
+      } catch (error) {
+        errorDiv.textContent = error.message;
+      }
+    }
+    fetchUsers();
+</script>
+</body>
+</html>
