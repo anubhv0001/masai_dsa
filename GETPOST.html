@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      max-width: 600px;
+      margin: auto;
+      background-color: #f9f9f9;
+    }
+    h2 {
+      text-align: center;
+    }
+    form {
+      margin-bottom: 20px;
+      display: flex;
+      gap: 10px;
+      flex-direction: column;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 1rem;
+    }
+    #users {
+      margin-top: 20px;
+    }
+    .user {
+      background: #fff;
+      padding: 10px;
+      border: 1px solid #ddd;
+      margin-bottom: 10px;
+      border-radius: 5px;
+    }
+    .error {
+      color: red;
+    }
+    .success {
+      color: green;
+    }
+  </style>
+</head>
+<body>
+  <h2>User Dashboard</h2>
+
+  <form id="userForm">
+    <input type="text" id="name" placeholder="Enter name" required />
+    <input type="email" id="email" placeholder="Enter email" required />
+    <button type="submit">Add User</button>
+    <div id="message"></div>
+  </form>
+
+  <div id="users">
+    <h3>Registered Users:</h3>
+    <div id="userList"></div>
+  </div>
+
+  <script>
+    const apiUrl = 'https://fir-form-83556-default-rtdb.asia-southeast1.firebasedatabase.app/getpost.json';
+    const userList = document.getElementById('userList');
+    const form = document.getElementById('userForm');
+    const nameInput = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+    const message = document.getElementById('message');
+    let users = [];
+
+    async function fetchUsers() {
+      try {
+        const res = await fetch(apiUrl);
+        const data = await res.json();
+
+        if (data) {
+          users = Object.entries(data).map(([id, user]) => ({
+            id,
+            ...user
+          }));
+        } else {
+          users = [];
+        }
+
+        displayUsers(users);
+      } catch (err) {
+        message.innerHTML = `<p class="error">Failed to fetch users.</p>`;
+      }
+    }
+
+    function displayUsers(users) {
+      userList.innerHTML = '';
+      users.forEach(user => {
+        const div = document.createElement('div');
+        div.className = 'user';
+        div.innerHTML = `<strong>${user.name}</strong><br>${user.email}`;
+        userList.appendChild(div);
+      });
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = nameInput.value.trim();
+      const email = emailInput.value.trim();
+
+      if (users.some(user => user.email.toLowerCase() === email.toLowerCase())) {
+        message.innerHTML = `<p class="error">User with this email already exists!</p>`;
+        return;
+      }
+
+      try {
+        const res = await fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ name, email }),
+        });
+
+        if (!res.ok) throw new Error();
+
+        const data = await res.json(); 
+        const newUser = { id: data.name, name, email };
+        users.push(newUser);
+        displayUsers(users);
+        message.innerHTML = `<p class="success">User added successfully!</p>`;
+        form.reset();
+      } catch (err) {
+        message.innerHTML = `<p class="error">Failed to add user.</p>`;
+      }
+    });
+
+    fetchUsers();
+  </script>
+</body>
+</html>
