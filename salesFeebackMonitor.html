@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    h2{
+        text-align: center;
+        color: black;
+        padding: 40px;
+        border: 10px solid;
+        border-radius: 5px;
+
+    }
+</style>
+<body>
+    <h2>Sales Feedback Monitor</h2>
+    <!--Feedback form-->
+    <form id="feedbackform">
+        <label for="nameinput">Agent name:</label>
+        <input type="text"id="nameinput"name="nameinput"required/>
+
+           <label for="clientCompany">Client Company:</label>
+        <input type="text"id="clientCompany"name="clientCompany"required/>
+      <label for="departement">Departement</label>
+        <select name="departement" id="departement">
+            <option value="support">support</options>
+            <option value="sales">sales</options>
+            <option value="technical">technical</options>
+            <option value="HR">HR</options>
+        </select>
+
+        <label for="satisfaction_score">Satisfaction score</label>
+        <input type="number" name="" id="satisfaction_score",min="1"max="5">
+        
+
+    </form>
+</body>
+</html>

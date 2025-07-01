@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Paginated Todo App</title>
+  <style>
+    body {
+      font-family:Arial, sans-serif;
+      background-color:#f2f2f2;
+      padding:20px;
+    }
+
+    h1 {
+      text-align:center;
+    }
+#todos{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-bottom:20px;
+    }
+
+    .todo-item {
+      background-color: white;
+      padding: 15px;
+      border-radius: 5px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+
+    #pagination{
+      text-align: center;
+    }
+button {
+      padding:10px 15px;
+      margin:0 10px;
+      font-size:16px;
+      cursor:pointer;
+    }
+
+    #page-number {
+      font-weight:bold;
+      font-size:18px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Paginated Todo App</h1>
+  <div id="todos"></div>
+
+  <div id="pagination">
+    <button onclick="prevPage()">Previous</button>
+    <span id="page-number">1</span>
+    <button onclick="nextPage()">Next</button>
+  </div>
+
+  <script>
+    let page=1;
+    const limit=5;
+
+    async function fetchTodos(page) {
+      try {
+        const res=await fetch(`https://jsonplaceholder.typicode.com/todos?_page=${page}&_limit=${limit}`);
+        const data=await res.json();
+        displayTodos(data);
+        document.getElementById("page-number").innerText=page;
+      } catch(error){
+        console.error("Failed to fetch todos:", error);
+      }
+    }
+function displayTodos(todos) {
+      const container=document.getElementById("todos");
+      container.innerHTML = "";
+
+      todos.forEach(todo => {
+        const div=document.createElement("div");
+        div.className="todo-item";
+        div.innerText=todo.title;
+        container.appendChild(div);
+      });
+    }
+
+    function nextPage() {
+      page++;
+      fetchTodos(page);
+    }
+
+    function prevPage() {
+      if (page>1) {
+        page--;
+        fetchTodos(page);
+      }
+    }
+    fetchTodos(page);
+  </script>
+</body>
+</html>
