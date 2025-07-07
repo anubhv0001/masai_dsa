@@ -11,9 +11,10 @@
     <div id="result"></div>
     <script>
         const searchBox=document.getElementById('searchBox');
-        const resultDiv=document.getElementById('results');
+        const resultDiv=document.getElementById('result');
 
         function debounce(func,delay){
+            let debounceTimeout; 
             return function (...args){
                 debounceTimeout=setTimeout(()=>{
                     func.apply(this,args);
@@ -26,7 +27,7 @@
         resultsDiv.innerHTML = '';
         return;
       }
-    }
+    
     try{
        const response=await fetch('')
        const data=await response.json();
@@ -41,6 +42,7 @@
          resultsDiv.innerHTML = `<div>Error fetching data.</div>`;
         console.error("Fetch error:", error);
     }
+}
       const debouncedSearch = debounce((e) => {
       fetchMovies(e.target.value);
     }, 500);
