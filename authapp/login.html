@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head><title>Login</title></head>
+<body>
+  <h2>Login</h2>
+  <input id="email"type="email"placeholder="Email"><br>
+  <input id="password"type="password"placeholder="Password"><br>
+  <button onclick="login()">Login</button>
+
+  <script src="firebase.js"></script>
+  <script>
+    function login() {
+      const email=document.getElementById('email').value;
+      const password=document.getElementById('password').value;
+
+      db.ref('users').once('value',(snapshot)=>{
+        let matched=false;
+        snapshot.forEach((userSnap)=>{
+          const user=userSnap.val();
+          if(user.email===email&&user.password===password) {
+            matched=true;
+            localStorage.setItem("loggedInUser",JSON.stringify(user));
+            window.location.href ="dashboard.html";
+          }
+        });
+        if(!matched) {
+          alert("Wrong credentials! Try again.");
+        }
+      });
+    }
+  </script>
+</body>
+</html>
