@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Student record manager</h2>
+    <form id="studentform">
+         <input type="text" id="name" placeholder="Name" required>
+    <input type="text" id="batch" placeholder="Batch" required>
+    <input type="number" id="age" placeholder="Age" required>
+    <input type="number" id="score" placeholder="Score (0–100)" required>
+    <button type="submit">Submit</button>
+    </form>
+    <input type="text"id="searchBox"placeholder="Search by name">
+
+     <div>
+    <button onclick="sortByAge()">Sort by Age ↑</button>
+    <button onclick="sortByScore()">Sort by Score ↓</button>
+  </div>
+    <div class="summary" id="summary"></div>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Batch</th>
+                <th>Age</th>
+                <th>Score</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+          <tbody id="studentTableBody"></tbody>
+    </table>
+    <script>
+        let students=[];
+        let editIndex=-1;
+ const form=document.getElementById("studentform")
+   const nameInput = document.getElementById("name");
+    const batchInput = document.getElementById("batch");
+    const ageInput = document.getElementById("age");
+    const scoreInput = document.getElementById("score");
+    const searchBox = document.getElementById("searchBox");
+    const tableBody = document.getElementById("studentTableBody");
+    const summary = document.getElementById("summary");
+     form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const name = nameInput.value.trim();
+      const batch = batchInput.value.trim();
+      const age = Number(ageInput.value);
+      const score = Number(scoreInput.value);
+
+      if (!name || !batch || age <= 0 || score < 0 || score > 100) {
+        alert("Please enter valid data.");
+        return;
+      }
+
+      const student = { name, batch, age, score };
+
+      if (editIndex >= 0) {
+        students[editIndex] = student;
+        editIndex = -1;
+      } else {
+        students.push(student);
+      }
+
+      form.reset();
+      renderTable();
+    });
+     function renderTable() {
+      const filter = searchBox.value.toLowerCase();
+      tableBody.innerHTML = "";
+
+      let filteredStudents = students.filter(s => s.name.toLowerCase().includes(filter));
+
+      filteredStudents.forEach((s, i) => {
+        const tr = document.createElement("tr");
+        if (s.score > 80) tr.classList.add("high-score");
+          tr.innerHTML = `
+          <td>${s.name}</td>
+          <td>${s.batch}</td>
+          <td>${s.age}</td>
+          <td>${s.score}</td>
+          <td class="actions">
+            <button onclick="editStudent(${i})">Edit</button>
+            <button onclick="deleteStudent(${i})">Delete</button>
+          </td>
+        `;
+      tableBody.appendChild(tr);
+      });
+
+    </script>
+</body>
+</html>
