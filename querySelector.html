@@ -1,0 +1,47 @@
+<!--Build a simple webpage with the following structure:
+
+A <ul> with three <li> items.
+A <button> with the text "Add Item".
+Write JavaScript to:
+
+Select the <ul> using querySelector and add a new <li> element with the text "New Item" whenever the button is clicked.
+Ensure each newly added <li> is styled with a bold font & blue colour if the sequence number of the li is odd and if the sequence no. is even style the li with italic font & red colour. .
+Submission Guidelines:
+Submit your Masai GitHub repository link containing the HTML and JavaScript files.-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <ul id="item-list">
+     <li>Item 1</li>
+     <li>Item 2</li>
+     <li>Item 3</li>
+     <li>Item 4</li>
+     <li>Item 5</li>
+     <li>Item 6</li>
+    </ul>
+    <button id="add-btn">Add Item</button>
+    <script>
+        const ul=document.querySelector("#item-list");
+        const button=document.querySelector("#add-btn")
+        button.addEventListener("click",function(){
+            const li=document.createElement("li");
+            const count=ul.children.length+1;
+            li.textContent="New item"
+            if (count%2===1){
+                li.style.fontWeight="bold";
+                li.style.color="blue";
+            }
+            else{
+                li.style.fontStyle="italic";
+                li.style.fontStyle="red";
+            }
+            ul.appendChild(li);
+        })
+    </script>
+</body>
+</html>
