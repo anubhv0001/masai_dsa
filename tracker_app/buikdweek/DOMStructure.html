@@ -1,0 +1,41 @@
+<!--Create a basic HTML page to demonstrate your understanding of the DOM and its structure. Your task is to write JavaScript that performs the following actions:
+
+Select the <h1> element by its id and change its text content to "Welcome to the DOM World!".
+Select all <p> elements using getElementsByTagName and set their text color to blue.
+Use querySelector to select the first <div> with the class container and change its background color to yellow.
+Ensure that your HTML structure includes at least one <h1>, multiple <p> elements, and a <div> with the class container.
+
+Submission Guidelines:
+Submit your Masai GitHub repository link containing the HTML and JavaScript files.-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1 id="main-heading">Original content</h1>
+    <p>My name is Anubhav singh</p>
+    <p>I live in ayodhya</p>
+    <p>I am doing software development course</p>
+    
+    <div class="container">
+    Paragraph inside container
+    </div>
+    <script>
+      const heading=document.getElementById("main-heading")
+      heading.textContent="Welcome to DOM world"
+
+      const paragraphs=document.getElementsByTagName("p");
+      for (let i=0;i<paragraphs.length;i++){
+        paragraphs[i].style.color="blue";
+
+      }
+      const containerDiv = document.querySelector(".container");
+           containerDiv.style.backgroundColor = "yellow";
+    </script>
+
+
+</body>
+</html>
