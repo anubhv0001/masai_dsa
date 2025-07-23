@@ -1,0 +1,65 @@
+<!--Create a webpage with the following elements:
+
+An <input> field where users can enter a color name.
+An <input> field where users can type text content.
+A <button> labeled "Change Background" for changing the background color of a <div>.
+A <button> labeled "Update Text" for updating the content of the <div>.
+A <div> with some initial text content, which can be updated based on user input (point 2).
+Tasks:
+When the "Change Background" button is clicked:
+Retrieve the color name entered in the first input field.
+Change the background color of the <div> to the entered color.
+If the entered value is invalid (not a recognized color), alert the user with "Invalid color name!".
+When the "Update Text" button is clicked:
+Retrieve the text entered in the second input field.
+Update the text content of the <div> with the entered text.
+If the input field is empty, do not update the text and display an alert saying "Please enter some text!".-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Enter color name:</h2>
+
+    <label>Enter color Name:</label>
+    <input type="text"id="color-input"placeholder="eg:red or #fofof0">
+    <button id="bg-btn">Change Background</button>
+    <br><br>
+     <label>Enter Text Content: </label>
+  <input type="text" id="text-input" placeholder="Enter new content" />
+  <button id="text-btn">Update Text</button>
+  <div id="output-div">This is the original content.</div>
+
+  <script>
+     const colorInput = document.getElementById("color-input");
+    const textInput = document.getElementById("text-input");
+    const bgBtn = document.getElementById("bg-btn");
+    const textBtn = document.getElementById("text-btn");
+    const outputDiv = document.getElementById("output-div");
+    function isValidColor(color){
+        const s=new Option().style;
+          s.color = color;
+        return s.color!="";
+    }
+      bgBtn.addEventListener("click",function () {
+      const color=colorInput.value.trim();
+      if (isValidColor(color)) {
+        outputDiv.style.backgroundColor = color;
+      } else {
+        alert("Invalid color name!");
+      }
+    });
+    textBtn.addEventListener("click", function () {
+      const newText = textInput.value.trim();
+      if (newText==="") {
+        alert("Please enter some text!");
+      } else {
+        outputDiv.textContent = newText;
+      }
+    });
+  </script>
+</body>
+</html>
