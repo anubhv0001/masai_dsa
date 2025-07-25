@@ -1,0 +1,102 @@
+<!--Create a webpage where users can enter notes into a text area and save them using localStorage. The notes should persist across page reloads,
+ and a "Load Notes" button should retrieve and display the saved notes in the text area. Additionally, provide a "Clear Notes" button to delete the stored notes from localStorage.
+
+Key Requirements:
+On page load, automatically check localStorage for saved notes and display them in the text area if they exist.
+Use proper validation to ensure no empty notes are saved.-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        h1{
+            text-align: center;
+        }
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            margin-top: 40px;
+            background-color: #f4f4f4;
+        }
+        textarea {
+      width: 100%;
+      height: 200px;
+      padding: 10px;
+      font-size: 16px;
+      resize: none;
+    }
+    .buttons {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    </style>
+</head>
+<body>
+    <h2>My Notes</h2>
+    <textarea id="notearea"placeholder="Write your notes here"></textarea>
+    <div class="buttons">
+          <button id="saveBtn">Save Notes</button>
+    <button id="loadBtn">Load Notes</button>
+    <button id="clearBtn">Clear Notes</button>
+    </div>
+      <div class="message" id="message"></div>
+      <script>
+   const noteArea = document.getElementById('notearea');
+    const saveBtn = document.getElementById('saveBtn');
+    const loadBtn = document.getElementById('loadBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const message = document.getElementById('message');
+      
+    const NOTES_KEY = "userNotes";
+      window.addEventListener('DOMContentLoaded',()=>{
+        const savedNotes=localStorage.getItem(NOTES_KEY)
+        if(savedNotes){
+            noteArea.value=savedNotes
+        }
+      })
+      saveBtn.addEventListener("click",()=>{
+        const notes=noteArea.value.trim();
+        if (notes===""){
+            showMessage("Cannot save empty notes")
+            return;
+        }
+        localStorage.setItem(NOTES_KEY,notes)
+         showMessage("Notes saved successfully!","green");
+      })
+      loadBtn.addEventListener("click",()=>{
+        const savedNotes=localStorage.getItem(NOTES_KEY)
+        if (savedNotes){
+           noteArea.value=savedNotes;
+           showMessage("Notes loaded successfully!","green") 
+        }
+        else{
+            showMessage("No saved notes found");
+        }
+      })
+      clearBtn.addEventListener("click",()=>{
+        localStorage.removeItem(NOTES_KEY);
+        noteArea.value="";
+        noteArea.innerHTML="";
+        showMessage("Notes cleared","green")
+      })
+   
+      function showMessage(msg,color="red"){
+        message.textContent=msg;
+        message.style.color=color;
+        setTimeout(()=>{
+            message.textContent="";
+        },2500);
+      }
+
+      </script>
+
+</body>
+</html>
