@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="outer">Outer div
+    <button>outer button</button>
+     <div class="middle">middle div
+    <button>middle button</button>
+     <div class="inner">
+        inner div 
+    <button>inner button</button>
+    </div>
+    </div>
+    </div>
+    <script>
+        function addListeners(element,name){
+            element.addEventListener("click",function(e){
+                alert(`${name}clicked(capturing)`)
+            },true);
+
+            element.addEventListener("click",function(e){
+                alert(`${name}clicked(bubbling)`);
+
+            });
+    }
+     addListeners(document.querySelector(".outer"), "Outer Div");
+    addListeners(document.querySelector(".middle"), "Middle Div");
+    addListeners(document.querySelector(".inner"), "Inner Div");
+
+      const innerButton = document.querySelector(".inner button");
+  innerButton.addEventListener("click", function (e) {
+      alert("Inner Button clicked (bubbling)");
+      e.stopPropagation(); 
+    });
+
+    
+    </script>
+
+</body>
+</html>
