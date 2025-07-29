@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="text"id="item-input"placeholder="Enter an item">
+    <button id="add-btn">Add</button>
+      <button id="clr-btn">Clear</button>
+    <p id="empty-message">No items added yet</p>
+    <ul id="item-list"></ul>
+    <script>
+         let items = JSON.parse(localStorage.getItem("myItems")) || [];
+
+    function updateUI() {
+      itemList.innerHTML = "";
+      if (items.length === 0) {
+        emptyMessage.style.display = "block";
+      } else {
+        emptyMessage.style.display = "none";
+        items.forEach(item => {
+          const li = document.createElement("li");
+          li.textContent = item;
+          itemList.appendChild(li);
+        });
+      }
+    }
+
+    function saveItems() {
+      localStorage.setItem("myItems", JSON.stringify(items));
+    }
+
+    addBtn.addEventListener("click", () => {
+      const value = input.value.trim();
+      if (value) {
+        items.push(value);
+        saveItems();
+        updateUI();
+        input.value = "";
+      }
+    });
+    clearBtn.addEventListener("click", () => {
+      items = [];
+      saveItems();
+      updateUI();
+    });
+    window.addEventListener("DOMContentLoaded", () => {
+      updateUI();
+    });
+    </script>
+</body>
+</html>
