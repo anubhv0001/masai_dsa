@@ -1,0 +1,78 @@
+<!--Problem Statement:
+Create a User Registration Page where users can sign up. The details should be submitted to the backend using a POST request.
+
+API Details:
+POST https://mockapi.io/users
+Content-Type: application/json
+Body: { "name": "John Doe", "email": "john@example.com", "password": "123456" }
+
+Requirements:
+Create an HTML form with:
+Name, Email, Password input fields.
+A "Register" button.
+A section to show success/failure messages.
+On form submission:
+Validate that all fields are filled.
+Send the form data to the API via a POST request.
+Show a success message if registration is successful.
+Handle API errors (e.g., email already exists).-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form id="registerForm">
+    <input type="text" id="name" placeholder="Full Name" required>
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <button type="submit">Register</button>
+  </form>
+  <div id="message"></div>
+  <script>
+    const form=document.getElementById('registerForm')
+    const messageDiv=document.getElementById('message')
+    form.addEventListener("submit",async function(e){
+        e.preventDefault();
+           const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+         if (!name || !email || !password) {
+        messageDiv.style.color = 'red';
+        messageDiv.textContent = 'All fields are required.';
+        return;
+      }
+const payload={name,email,password};
+
+try{
+    const res=await fetch('https://64d55059b592423e8e8b83d2.mockapi.io/api/users',{
+        method:'POST',
+        headers:{
+        'Content-Type':'application/json',
+
+        },
+        body:JSON.stringify(payload),
+
+    });
+    if(!res.ok){
+        throw new Error(`"Registration failed.Email may already exist"`)
+    }
+        const data=await res.json();
+        message.style.color='green';
+        messageDiv.textContent='`Registration successfull,${data.name}`'
+        form.reset();
+}
+
+    catch(error){
+         messageDiv.style.color = 'red';
+        messageDiv.textContent = error.message;
+    
+
+}
+    });
+
+  </script>
+</body>
+</html>

@@ -44,12 +44,9 @@ Handles loading and error states properly.-->
                productList.innerHTML='';
                let url="https://64d55059b592423e8e8b83d2.mockapi.io/api/products"
            
-               
-  if (category) params.append("category", category);
-  if (minPrice) params.append("min_price", minPrice);
-  if (maxPrice) params.append("max_price", maxPrice);
-                 
-            
+              if (category) url += `category=${category}&`;
+if (minPrice) url += `min_price=${minPrice}&`;
+if (maxPrice) url += `max_price=${maxPrice}&`;
               
           try{
             const res=await fetch(url);
