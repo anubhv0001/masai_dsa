@@ -1,0 +1,84 @@
+<!--Problem Statement:
+You need to build a Product Search Page that fetches and displays products based on user-selected filters.
+
+API Details:
+GET https://mockapi.io/products?category=electronics&min_price=1000&max_price=5000&sort=asc
+
+Requirements:
+Create an HTML page with:
+A dropdown to select the category (e.g., Electronics, Clothing, Books).
+Two input fields to enter the minimum and maximum price.
+A button to trigger the search request.
+A section to display the fetched product list (name, image, price).
+Write a JavaScript function that:
+Constructs the API URL dynamically based on user input.
+Fetches data and displays the results in a grid layout.
+Handles loading and error states properly.-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="control">
+        <select id="category">
+      <option value="">Select category</option>
+      <option value="electronics">Electronics</option>
+      <option value="clothing">Clothing</option>
+      <option value="book">Books</option>
+        </select>
+        <input type="number"id="minPrice"placeholder="Min price">
+         <input type="number"id="maxPrice"placeholder="Max price">
+          <button onclick="fetchProducts()">Search</button>
+          <div id="product-list"></div>
+    </div>
+    <script>
+        async function fetchProducts(){
+            const category=document.getElementById('category').value;
+              const minPrice=document.getElementById('minPrice').value;
+              const maxPrice=document.getElementById('maxPrice').value;
+               const productList = document.getElementById('product-list');
+
+               productList.innerHTML='';
+               let url="https://64d55059b592423e8e8b83d2.mockapi.io/api/products"
+           
+               
+  if (category) params.append("category", category);
+  if (minPrice) params.append("min_price", minPrice);
+  if (maxPrice) params.append("max_price", maxPrice);
+                 
+            
+              
+          try{
+            const res=await fetch(url);
+            if (!res.ok)throw new Error('Failed to fetch')
+
+             const products=await res.json();
+             if(products.length===0){
+                 productList.innerHTML = '<p>No products found.</p>';
+                        return;
+             }
+             products.forEach(product=>{
+                const card=document.createElement('div');
+                card.className='product-card';
+                card.innerHTML=`
+                <img src="${product.image || 'https://via.placeholder.com/150'}" alt="${product.name}">
+                <h3>${product.name}</h3>
+                  <p>₹${product.price}</p>
+                `
+                 productList.appendChild(card)
+             })
+            
+          }
+          catch(error){
+                   productList.innerHTML = `<p style="color:red;">${error.message}</p>`;
+          }
+       
+
+
+        }
+    </script>
+</body>
+</html>
