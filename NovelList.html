@@ -1,0 +1,128 @@
+<!--You are tasked with creating a simple UI to display a list of novels using Firebase Firestore as your database. The list of novels is 
+provided as JSON data containing details about each novel, including properties such as title, author, price, release year, and genre. You 
+need to:
+
+Tasks:
+Firebase Setup:
+Set up a Firebase project and use Firebase Firestore to store the provided novel data. Make sure your Firebase Firestore collection is
+ structured correctly to store the novel details (title, author, price, release year, genre). Render Data:
+Fetch the list of novels from Firebase Firestore and render it on a UI. The UI should display the title, author, price, release year,
+ and genre for each novel. Use JavaScript to handle the fetching and rendering of data, and ensure that it is displayed in a clean, 
+ user-friendly manner (e.g., in a table or grid format).
+Filtering:
+Implement a filtering feature on the UI to allow users to filter novels by release year. The user should be able to select
+ a specific year or a range of years to filter the results. This should be done by querying Firebase Firestore with the 
+ appropriate filters based on the selected year(s).
+Sorting:
+Implement a sorting feature to allow users to sort the novels by price in both ascending and descending order. 
+The sorting should be implemented using Firestore queries, ensuring that the data is sorted on the server side to optimize performance.
+Search:
+Implement a search functionality that allows users to search for novels by title and author. The search should be implemented as a simple input field, and the query should return results dynamically as the user types. Make sure the search works efficiently with Firestore queries.-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Novel List</title>
+</head>
+<body>
+  <h1>Novel List</h1>
+  <input type="text" id="searchInput" placeholder="Search by title or author">
+  <select id="yearFilter">
+    <option value="">All years</option>
+    <option value="2022">2022</option>
+    <option value="2023">2023</option>
+    <option value="2024">2024</option>
+  </select>
+  <select id="priceSort">
+    <option value="">Sort by Price</option>
+    <option value="asc">Price Low to High</option>
+    <option value="desc">Price High to Low</option>
+  </select>
+
+  <div id="novelList"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCxpL2TKXxfAJ_yPtDRTs9whoHMMzVKOJI",
+      authDomain: "fetchnovel-27747.firebaseapp.com",
+      projectId: "fetchnovel-27747",
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const searchInput = document.getElementById("searchInput");
+    const yearFilter = document.getElementById("yearFilter");
+    const priceSort = document.getElementById("priceSort");
+    const novelList = document.getElementById("novelList");
+
+    async function fetchAndRenderNovels() {
+      let query = db.collection("novels");
+      const year = yearFilter.value;
+      const searchText = searchInput.value.trim().toLowerCase();
+      const sort = priceSort.value;
+
+      if (year) {
+        query = query.where("releaseYear", "==", parseInt(year));
+      }
+
+      if (sort === "asc" || sort === "desc") {
+        query = query.orderBy("price", sort);
+      }
+
+      const snapshot = await query.get();
+      let novels = snapshot.docs.map(doc => doc.data());
+
+      if (searchText) {
+        novels = novels.filter(novel =>
+          novel.title.toLowerCase().includes(searchText) ||
+          novel.author.toLowerCase().includes(searchText)
+        );
+      }
+
+      renderNovels(novels);
+    }
+
+    function renderNovels(novels) {
+      novelList.innerHTML = "";
+      if (novels.length === 0) {
+        novelList.innerHTML = "<p>No novels found.</p>";
+        return;
+      }
+
+      novels.forEach(novel => {
+        const div = document.createElement("div");
+        div.innerHTML = `
+          <h3>${novel.title}</h3>
+          <p><strong>Author:</strong> ${novel.author}</p>
+          <p><strong>Price:</strong> ₹${novel.price}</p>
+          <p><strong>Release Year:</strong> ${novel.releaseYear}</p>
+          <p><strong>Genre:</strong> ${novel.genre}</p>
+          <hr>
+        `;
+        novelList.appendChild(div);
+      });
+    }
+
+    function debounce(func, delay) {
+      let timeout;
+      return function () {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func(), delay);
+      };
+    }
+
+    searchInput.addEventListener("input", debounce(fetchAndRenderNovels, 300));
+    yearFilter.addEventListener("change", fetchAndRenderNovels);
+    priceSort.addEventListener("change", fetchAndRenderNovels);
+
+    fetchAndRenderNovels();
+  </script>
+</body>
+</html>
