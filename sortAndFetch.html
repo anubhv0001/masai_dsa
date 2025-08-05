@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <p>Sorted User list</p>
+
+    <div class="controls">
+        <label for="sort">Sort by:</label>
+        <select id="sort">
+            <option value="name">Name(A-Z)</option>
+            <option value="name">Name(Z-A)</option>
+           </select>
+    </div>
+     <div id="userList" class="user-list"></div>
+     <script>
+        const userList = document.getElementById("userList");
+const sortSelect = document.getElementById("sort");
+
+let users = [];
+async function fetchUsers() {
+  try {
+    const res = await fetch("https://jsonplaceholder.typicode.com/users");
+    if (!res.ok) throw new Error("Failed to fetch users.");
+    const data = await res.json();
+    users = data;
+    renderUsers(users);
+  } catch (error) {
+    userList.innerHTML = `<p style="color:red;">${error.message}</p>`;
+  }
+}
+function renderUsers(data) {
+  userList.innerHTML = "";
+  data.forEach(user => {
+    const card = document.createElement("div");
+    card.className = "user-card";
+    card.innerHTML = `
+      <strong>${user.name}</strong>
+      <em>${user.email}</em>
+      📍 ${user.address.city}
+    `;
+    userList.appendChild(card);
+  });
+}
+sortSelect.addEventListener("change", () => {
+  const sortBy = sortSelect.value;
+  let sortedUsers = [...users];
+  
+  sortedUsers.sort((a, b) => {
+    if (sortBy === "name") {
+      return a.name.localeCompare(b.name);
+    } else if (sortBy === "-name") {
+      return b.name.localeCompare(a.name);
+    }
+    return 0;
+  });
+renderUsers(sortedUsers);
+});
+fetchUsers();
+     </script>
+</body>
+</html>
