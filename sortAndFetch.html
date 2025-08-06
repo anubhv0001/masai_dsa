@@ -32,6 +32,7 @@ async function fetchUsers() {
     userList.innerHTML = `<p style="color:red;">${error.message}</p>`;
   }
 }
+
 function renderUsers(data) {
   userList.innerHTML = "";
   data.forEach(user => {
