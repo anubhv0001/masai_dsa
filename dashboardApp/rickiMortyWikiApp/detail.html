@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>character details</title>
+     <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <header class="app-header small">
+        <h1 id="charName">Character</h1>
+        <h1 id="charName">Character</h1>
+      <div class="controls">
+        <button id="themeToggleDetail" aria-label="Toggle theme">🌙</button>
+    </header>
+    <main class="detail-main">
+        <div class="detail-card">
+            <img id="charImage" alt="character image" />
+        <div class="detail-info">
+          <p><strong>Status:</strong> <span id="charStatus"></span></p>
+          <p><strong>Species:</strong> <span id="charSpecies"></span></p>
+          <p><strong>Type:</strong> <span id="charType"></span></p>
+          <p><strong>Gender:</strong> <span id="charGender"></span></p>
+          <p><strong>Origin:</strong> <span id="charOrigin"></span></p>
+          <p><strong>Location:</strong> <span id="charLocation"></span></p>
+          <p><strong>Episodes:</strong> <span id="charEpisodes"></span></p>
+        </div>
+        </div>
+    </main>
+     <footer>
+      <div id="clockDetail" class="clock">--:--:-- — Loading date</div>
+    </footer>
+
+    <script src="detail.js" type="module"></script>
+</body>
+</html>
