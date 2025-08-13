@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Code keeper</h2>
+    <form id="codeForm">
+        <input type="text"id="title"placeholder="Enter title"required>
+        <input type="text"id="language"placeholder="language.."required>
+        <input type="text"id="code"placeholder="Entee your code"required>
+        </form>
+        <div id="codeList"></div>
+
+        <script>
+            const form=document.getElementById("codeForm")
+            const codeList=document.getElementById("codeList")
+         document.addEventListener('DOMContentLoaded',loadCodes);
+         form.addEventListener('submit',function(e){
+            e.preventDefault();
+            const title=document.getElementById("title").value;
+            const language=document.getElementById("language").value;
+            const code =document.getElementById("title").value;
+
+            if(!title||!language||!code)alert("Enter all fields")
+
+            const newCode={title,language,code}
+            let codes=JSON.parse(localStorage.getItem('codes')||[]);
+            codes.push(newCode);
+            localStorage.setItem('codes',JSON.stringify(codes));
+            appendCode(newCode,codes.length-1);
+            form.reset();
+         })
+         function appendCode(codeObj,index){
+            const div=document.createElement('div');
+            dic.className='code-item';
+            div.innerHTML=`
+            <h3>${codeObj.title}</h3>
+            <div class="lang">${codeObj.language}</div>
+            <pre>${codeObj.code}</pre>
+            `
+            codeList.appendChild(div);
+         }
+        
+        
+
+        </script>
+</body>
+</html>
