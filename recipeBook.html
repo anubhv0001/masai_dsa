@@ -1,0 +1,129 @@
+<!--You will build a single-page application called "FlavorFind" that allows users to search for recipes from a public API and save their favorites to a personal, cloud-synced recipe box. This project will test your ability to integrate a third-party API with a Firebase backend, manage user authentication, and create a dynamic, responsive user interface.
+
+Technical Stack & Setup:
+Frontend: HTML, CSS, and vanilla JavaScript.
+Backend: Google Firebase (Authentication and Firestore).
+External API: TheMealDB API.
+External API Endpoints:
+You are required to use the following specific endpoints from TheMealDB API:
+
+Search Recipes by Name:
+URL: https://www.themealdb.com/api/json/v1/1/search.php?s=YOUR_SEARCH_TERM
+Usage: Use this endpoint for the search bar functionality. Replace YOUR_SEARCH_TERM with the user's input.
+Lookup Full Recipe Details by ID:
+URL: https://www.themealdb.com/api/json/v1/1/lookup.php?i=RECIPE_ID
+Usage: While the search endpoint provides basic data, you may use this endpoint if you need more detailed information for a specific recipe after a user saves it. Replace RECIPE_ID with the idMeal of the recipe.
+Feature Breakdown:
+Your entire application will be built on a single index.html page. The visibility and content of different sections will be controlled dynamically with JavaScript.
+
+1. UI Layout & DOM Structure
+The page should be divided into three logical sections:
+
+An Authentication Section: Contains simple forms for user Sign Up and Login. This is the only section visible to logged-out users.
+A Recipe Search Section: Includes a search input field and a container to display recipe results. This section is visible only to logged-in users.
+A "My Recipe Box" Section: This is where the user's saved recipes will be displayed. It's also visible only to logged-in users.
+Upon successful login, the Auth section should be hidden, and the Search and Recipe Box sections should become visible.
+
+2. User Authentication with Firebase
+Implement user Sign Up and Login using Firebase Authentication (Email & Password).
+Add a Logout button that clears the user's session and resets the UI to its logged-out state.
+The application must be auth-aware, protecting user-specific content.
+3. Recipe Search & Debouncing (Fetch, DOM, Debouncing)
+When a logged-in user types in the search bar (e.g., "chicken", "pasta"), your app must make a GET request to the specified TheMealDB search endpoint.
+Crucial Requirement: The search input must be debounced. An API call should only be made after the user has stopped typing for a brief period (e.g., 500ms) to avoid sending excessive requests.
+Dynamically render the search results. Each result should show the recipe's image, name, and an "Add to Box" button.
+4. Recipe Box Management (Firestore CRUD)
+Security Rules: Configure your Firestore Security Rules to ensure that users can only read and write to their own recipe documents. A rule like allow read, write: if request.auth.uid == resource.data.userId; is a good starting point.
+Create (POST): Clicking "Add to Box" on a recipe should create a new document in a recipes collection in Firestore. This document must store the recipe's unique ID (idMeal from the API), its name (strMeal), its thumbnail URL (strMealThumb), the current user's UID, and a status field with a default value of 'To Try'.
+Read (GET): Upon login, fetch all recipes from the user's collection in Firestore and render them in the "My Recipe Box" section.
+Update (PUT/PATCH): Each saved recipe should have a button to "Mark as Made". Clicking this updates the status of the document in Firestore to 'Made'.
+Delete (DELETE): Each saved recipe needs a "Remove" button that deletes its corresponding document from Firestore.
+5. Dynamic Filtering & LocalStorage
+Filtering: Provide buttons above the recipe box to filter the displayed list: "All", "To Try", and "Made". This filtering should happen instantly on the client-side without a new database query.
+LocalStorage: Implement a simple theme switcher (e.g., a "Light/Dark Mode" toggle). The user's choice must be saved to LocalStorage so the theme is remembered on their next visit.-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <div id="loginPage">
+            <h2>Login</h2>
+            <form id="loginForm">
+            <input type="email"id="email">
+            <input type="password"id="password">
+            <button type="submit">Login</button>
+            </form>
+        </div>
+    </div>
+    <div id="recipePage" class="hidden">
+        <h2>Search Recipes</h2>
+    <input type="text"id="searchBox"placeholder="Enter recipe name..">
+    <div id="results"></div>
+    <h3>Saved recipes</h3>
+    <div id="savedRecipes"></div>
+    </div>
+    
+
+    <script>
+        // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyD8tx4DG7el8gDEvxcC2qymzuzYblxJ81I",
+  authDomain: "recipebook-6b38c.firebaseapp.com",
+  databaseURL: "https://recipebook-6b38c-default-rtdb.firebaseio.com",
+  projectId: "recipebook-6b38c",
+  storageBucket: "recipebook-6b38c.firebasestorage.app",
+  messagingSenderId: "323240454154",
+  appId: "1:323240454154:web:e1503ed70ce961922d57f3",
+  measurementId: "G-SQP72FXTC1"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+const loginPage=document.getElementById("loginPage")
+const recipePage=document.getElementById("recipePage")
+const loginForm=document.getElementById("loginForm")
+const searchBox=document.getElementById("searchBox")
+const resultsDiv=document.getElementById("results")
+const savedDiv=document.getElementById("savedRecipes")
+
+loginForm.addEventListener('submit'(e)=>{
+    e.preventDefault();
+    let email=document.getElementById('email').value;
+    let pass=document.getElementById('password').value;
+    auth.signInWithEmailAndPassword(email,pass)
+    .then(()=>{
+        loginPage.classList.add('hidden');
+        recipePage.classList.remove('hidden');
+    })
+    .catch(err=>alert("Login failed"+err.message))
+})
+let debounceTimer;
+searchBox.addEventListener('input',()=>{
+    clearTimeout(debounceTimer);
+    const query=searchBox.value.trim();
+    if(!query){
+        resultsDiv.innerHTML=" ";
+        return;
+    }
+    debounceTimer=setTimeout(()=>{
+    
+    })
+})
+    </script>
+    
+</body>
+</html>
