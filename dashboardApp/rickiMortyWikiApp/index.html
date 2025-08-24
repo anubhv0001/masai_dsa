@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RickAndMortyWiki</title>
+    <link rel="stylesheet"href="style.css">
+</head>
+<body>
+  <header class="appHeader">
+    <h1>Ricky and morty character gallery</h1>
+    <div id="controls">
+        <button id="themeToggle"aria-label="Togel theme">🌙</button>
+        <button id="randombtn">Random character</button>
+    </div>
+  </header>  
+  <main>
+    <section id="gallery"class="grid-3x2"></section>
+
+    <div class="pagination">
+        <button id="prevBtn">Previous</button>
+        <span id="pageInfo">Page 1/1</span>
+        <button id="nextBtn">Next</button>
+    </div>
+  </main>
+   <footer>
+      <div id="clock" class="clock">--:--:-- — Loading date</div>
+    </footer>
+     <script src="scripts.js" type="module"></script>
+
+</body>
+</html>
