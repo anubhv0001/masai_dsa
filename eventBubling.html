@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>L1 - Event Propagation Exploration</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .box {
+      border: 2px solid black;
+      padding: 20px;
+      margin: 10px;
+    }
+    #outer { background: #f8d7da; }
+    #middle { background: #d1ecf1; }
+    #inner { background: #d4edda; }
+    button {
+      margin-top: 10px;
+      padding: 6px 12px;
+    }
+  </style>
+</head>
+<body>
+  <h2>L1 - Event Propagation Exploration</h2>
+
+  <div id="outer" class="box">
+    Outer Div
+    <button id="outer-btn">Outer Button</button>
+
+    <div id="middle" class="box">
+      Middle Div
+      <button id="middle-btn">Middle Button</button>
+
+      <div id="inner" class="box">
+        Inner Div
+        <button id="inner-btn">Inner Button</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function addListeners(element, name) {
+
+      element.addEventListener('click', (e) => {
+        alert(name + " (capturing)");
+      }, true);
+
+      element.addEventListener('click', (e) => {
+        alert(name + " (bubbling)");
+      });
+    }
+
+
+    const outer = document.getElementById('outer');
+    const middle = document.getElementById('middle');
+    const inner = document.getElementById('inner');
+
+    const outerBtn = document.getElementById('outer-btn');
+    const middleBtn = document.getElementById('middle-btn');
+    const innerBtn = document.getElementById('inner-btn');
+
+    addListeners(outer, "Outer Div");
+    addListeners(middle, "Middle Div");
+    addListeners(inner, "Inner Div");
+
+    addListeners(outerBtn, "Outer Button");
+    addListeners(middleBtn, "Middle Button");
+
+    
+    innerBtn.addEventListener('click', (e) => {
+      alert("Inner Button (capturing)");
+    }, true);
+
+    innerBtn.addEventListener('click', (e) => {
+      alert("Inner Button (bubbling) - Stopping propagation!");
+      e.stopPropagation();
+    });
+  </script>
+</body>
+</html>
