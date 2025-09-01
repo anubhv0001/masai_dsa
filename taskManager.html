@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>L2 - Advanced Task Manager</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    #taskList {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      padding: 8px;
+      margin: 5px 0;
+      border: 1px solid #333;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    li.completed {
+      text-decoration: line-through;
+      color: gray;
+    }
+    button {
+      margin: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h2>L2 - Advanced Task Manager with Event Delegation and Filtering</h2>
+
+  
+  <input id="taskInput" type="text" placeholder="Enter task">
+  <button id="addTask">Add Task</button>
+
+  
+  <div>
+    <button data-filter="all">All Tasks</button>
+    <button data-filter="completed">Completed Tasks</button>
+    <button data-filter="incomplete">Incomplete Tasks</button>
+  </div>
+
+  <ul id="taskList"></ul>
+
+  <script>
+    const taskInput = document.getElementById('taskInput');
+    const addTaskBtn = document.getElementById('addTask');
+    const taskList = document.getElementById('taskList');
+    const filterButtons = document.querySelectorAll('button[data-filter]');
+
+    addTaskBtn.addEventListener('click', () => {
+      const taskText = taskInput.value.trim();
+      if (!taskText) {
+        alert("Please enter a task!");
+        return;
+      }
+
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <label>
+          <input type="checkbox" class="toggle"> ${taskText}
+        </label>
+        <button class="delete">Delete</button>
+      `;
+      taskList.appendChild(li);
+      taskInput.value = "";
+    });
+    taskList.addEventListener('click', (e) => {
+      if (e.target.classList.contains('delete')) {
+        e.target.closest('li').remove();
+      }
+    });
+
+    taskList.addEventListener('change', (e) => {
+      if (e.target.classList.contains('toggle')) {
+        e.target.closest('li').classList.toggle('completed', e.target.checked);
+      }
+    });
+    filterButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const filter = button.dataset.filter;
+        const tasks = taskList.querySelectorAll('li');
+
+        tasks.forEach(task => {
+          switch (filter) {
+            case 'all':
+              task.style.display = "flex";
+              break;
+            case 'completed':
+              task.style.display = task.classList.contains('completed') ? "flex" : "none";
+              break;
+            case 'incomplete':
+              task.style.display = task.classList.contains('completed') ? "none" : "flex";
+              break;
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
