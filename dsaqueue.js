@@ -8,7 +8,6 @@ Next round begins from that person.
 So basically, in each round, we can only take a strictly increasing sequence from the front. */
 
 function runProgram(input) {
-  // Write code here
       input = input.trim().split("\n");
     let t = +input[0];
     let line = 1;
