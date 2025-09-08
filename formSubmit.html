@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feedback Form - Firebase Realtime Database</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    form { margin-bottom: 20px; }
+    input, textarea { display: block; margin: 10px 0; padding: 8px; width: 300px; }
+    button { padding: 10px 15px; background: #28a745; color: white; border: none; cursor: pointer; }
+    button:hover { background: #218838; }
+    #message { margin-top: 15px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h2>Submit Feedback</h2>
+
+  <form id="feedbackForm">
+    <label>Username:</label>
+    <input type="text"id="username"required>
+
+    <label>Message:</label>
+    <textarea id="feedback"rows="4" required></textarea>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <div id="message"></div>
+
+  <script>
+    
+    const DATABASE_URL = "https://submitform-c7d5b-default-rtdb.firebaseio.com/feedback.json";
+
+    document.getElementById("feedbackForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const username = document.getElementById("username").value.trim();
+      const feedback = document.getElementById("feedback").value.trim();
+      const messageDiv = document.getElementById("message");
+
+      if (!username || !feedback) {
+        messageDiv.style.color = "red";
+        messageDiv.innerText = "Please fill in both fields.";
+        return;
+      }
+
+      const newFeedback = { username, message: feedback, timestamp: new Date().toISOString() };
+
+      try {
+        let res = await fetch(DATABASE_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newFeedback)
+        });
+
+        if (!res.ok) throw new Error("Failed to submit feedback");
+
+        messageDiv.style.color = "green";
+        messageDiv.innerText = "Feedback submitted successfully!";
+        document.getElementById("feedbackForm").reset();
+
+      } catch (err) {
+        messageDiv.style.color = "red";
+        messageDiv.innerText = "Error: " + err.message;
+      }
+    });
+  </script>
+</body>
+</html>
