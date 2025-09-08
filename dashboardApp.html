@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Dashboard</title>
+  
+</head>
+<body>
+
+  <h2>User Dashboard</h2>
+  <div class="container">
+    <div class="form-container">
+      <h3>Add New User</h3>
+      <form id="userForm">
+        <input type="text" id="name" placeholder="Enter name" required />
+        <input type="email" id="email" placeholder="Enter email" required />
+        <button type="submit">Add User</button>
+      </form>
+      <div id="message"></div>
+    </div>
+    <div class="users-container">
+      <h3>Registered Users</h3>
+      <ul id="userList"></ul>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = "https://mockapi.io/users";
+    const userList = document.getElementById("userList");
+    const messageBox = document.getElementById("message");
+
+    // Fetch and display all users
+    async function fetchUsers() {
+      try {
+        const res = await fetch(API_URL);
+        if (!res.ok) throw new Error("Failed to fetch users");
+        const users = await res.json();
+
+        userList.innerHTML = "";
+        users.forEach(user => {
+          const li = document.createElement("li");
+          li.textContent = `${user.name} - ${user.email}`;
+          userList.appendChild(li);
+        });
+      } catch (error) {
+        messageBox.textContent = "❌ " + error.message;
+        messageBox.className = "error";
+      }
+    }
+
+    // Add new user
+    document.getElementById("userForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+
+      if (!name || !email) {
+        messageBox.textContent = "All fields are required!";
+        messageBox.className = "error";
+        return;
+      }
+
+      try {
+        const resCheck = await fetch(API_URL);
+        const existingUsers = await resCheck.json();
+        if (existingUsers.some(user => user.email === email)) {
+          messageBox.textContent = "❌ Email already exists!";
+          messageBox.className = "error";
+          return;
+        }
+
+        const res = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email }),
+        });
+
+        if (!res.ok) throw new Error("Failed to add user");
+
+        const data = await res.json();
+        messageBox.textContent = `✅ User ${data.name} added successfully!`;
+        messageBox.className = "success";
+        document.getElementById("userForm").reset();
+
+        fetchUsers();
+      } catch (error) {
+        messageBox.textContent = "❌ " + error.message;
+        messageBox.className = "error";
+      }
+    });
+    fetchUsers();
+  </script>
+</body>
+</html>
