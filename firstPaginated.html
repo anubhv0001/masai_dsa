@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #fetch-btn{
+            justify-content: center;
+            background-color: blueviolet;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            font-size: 18px;
+            border-radius: 8px;
+            color: antiquewhite;
+        }
+    </style>
+</head>
+<body>
+    <h1>Paginated Todo App</h1>
+    <button id="fetch-btn">fetch todos</button>
+    <ul id="todos"></ul>
+
+    <div class="pagination"id="pagination"></div>
+
+    <script>
+        const API_URL = "https://jsonplaceholder.typicode.com/todos";
+const fetchBtn = document.getElementById("fetch-btn");
+const todosContainer = document.getElementById("todos");
+const paginationContainer = document.getElementById("pagination");
+const limit = 10; 
+const totalTodos = 200; 
+const totalPages = Math.ceil(totalTodos / limit);
+
+async function fetchTodos(page) {
+  try {
+    let res = await fetch(`${API_URL}?_page=${page}&_limit=${limit}`);
+    let data = await res.json();
+    renderTodos(data);
+    highlightActiveButton(page);
+  } catch (error) {
+    console.error("Error fetching todos:", error);
+  }
+}
+function renderTodos(todos) {
+  todosContainer.innerHTML = "";
+  todos.forEach(todo => {
+    let li = document.createElement("li");
+    li.textContent = `${todo.id}. ${todo.title} - ${todo.completed ? "✅ Completed" : "Pending"}`;
+    todosContainer.appendChild(li);
+  });
+}
+function setupPagination() {
+  paginationContainer.innerHTML = ""; 
+  for (let i = 1; i <= totalPages; i++) {
+    let btn = document.createElement("button");
+    btn.textContent = i;
+    btn.addEventListener("click", () => fetchTodos(i));
+    paginationContainer.appendChild(btn);
+  }
+}
+function highlightActiveButton(activePage) {
+  let buttons = paginationContainer.querySelectorAll("button");
+  buttons.forEach((btn, index) => {
+    btn.classList.toggle("active", index + 1 === activePage);
+  });
+}
+
+fetchBtn.addEventListener("click", () => {
+  setupPagination();
+  fetchTodos(1); 
+});
+    </script>
+</body>
+</html>
