@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>User pagination</h1>
+    <div id="user-container"></div>
+    <div class="pagination" id="pagination"></div>
+
+    <script>
+        const API_URL = "https://jsonplaceholder.typicode.com/users";
+        let userContainer=document.getElementById("user-container");
+        let paginationContainer=document.getElementById("pagination")
+        const limit=6;
+        const totalUser=10;
+        const totalPages=Math.ceil(totalUser/limit)
+                                              
+        async function fetchUsers(page){
+          try{
+            let res=await fetch(`${API_URL}?_page=${page}&_limit=${limit}`)
+            if (!res.ok)throw new Error('Failed to fetch users')
+            let data=await res.json();
+        renderUsers(data);
+        highlightActiveButton(page);
+          }
+          catch (error) {
+    userContainer.innerHTML = `<p style="color:red;">${error.message}</p>`;
+    console.error(error);
+  }
+        }
+        function renderUsers(users) {
+  userContainer.innerHTML = "";
+  users.forEach(user => {
+    let card = document.createElement("div");
+    card.className = "user-card";
+    card.innerHTML = `
+      <h3>${user.name}</h3>
+      <p><strong>Email:</strong> ${user.email}</p>
+      <p><strong>Phone:</strong> ${user.phone}</p>
+      <p><strong>Website:</strong> ${user.website}</p>
+      <p><strong>Company:</strong> ${user.company.name}</p>
+    `;
+    userContainer.appendChild(card);
+  });
+}
+function setupPagination() {
+  paginationContainer.innerHTML = "";
+  for (let i = 1; i <= totalPages; i++) {
+    let btn = document.createElement("button");
+    btn.textContent = i;
+    btn.addEventListener("click", () => fetchUsers(i));
+    paginationContainer.appendChild(btn);
+  }
+}
+function highlightActiveButton(activePage) {
+  let buttons = paginationContainer.querySelectorAll("button");
+  buttons.forEach((btn, index) => {
+    btn.classList.toggle("active", index + 1 === activePage);
+  });
+}
+window.addEventListener("DOMContentLoaded", () => {
+  setupPagination();
+  fetchUsers(1);
+});
+    </script>
+</body>
+</html>
