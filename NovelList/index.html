@@ -1,34 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Novel List</title>
 </head>
 <body>
-    <div class="container">
-        <h1>Novel List</h1>
-        <div id="controls">
-        <input type="text"id="search"placeholder="Search by title or author">
-        <label for="year">Filter by year:</label>
-        <select id="year">
-              <option value="">All</option>
-           <option value="2020">2020</option>
-           <option value="2021">2021</option>
-           <option value="2022">2022</option>
-        </select>
+  <div class="container">
+    <h1>Novel List</h1>
+    <div id="controls">
+      <input type="text" id="search" placeholder="Search by title or author">
+      <label for="year">Filter by year:</label>
+      <select id="year">
+        <option value="">All</option>
+        <option value="2020">2020</option>
+        <option value="2021">2021</option>
+        <option value="2022">2022</option>
+      </select>
 
-        <label for="sort">Sort by price:</label>
-        <select id="sort">
-            <option value="">None</option>
-            <option value="asc">Low->high</option>
-            <option value="desc">High->low</option>
-        </select>
-
-
+      <label for="sort">Sort by price:</label>
+      <select id="sort">
+        <option value="">None</option>
+        <option value="asc">Low → High</option>
+        <option value="desc">High → Low</option>
+      </select>
     </div>
-    <div id="novel-List"class="grid"></div>
-    <script type="module" src="main.js"></script>
-</div>
+    <div id="novel-list" class="grid"></div>
+  </div>
+  <script type="module" src="script.js"></script>
 </body>
 </html>

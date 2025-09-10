@@ -13,7 +13,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const novelList = document.getElementById("novel-List");
+const novelList = document.getElementById("novel-list");
 const searchInput = document.getElementById("search");
 const yearFilter = document.getElementById("year");
 const sortSelect = document.getElementById("sort");
