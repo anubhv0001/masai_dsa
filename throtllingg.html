@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debounced movie search </title>
+    <style>
+        body{
+            font-family: sans-serif;
+            padding:20px;
+        }
+        input {
+      width: 300px;
+      padding: 10px;
+      font-size: 16px;
+    }
+    #results {
+      margin-top: 20px;
+    }
+    .movie {
+      padding: 8px;
+      border-bottom: 1px solid #ddd;
+    }
+    </style>
+    
+</head>
+<body>
+    <h1>Movie search</h1>
+    <input type="text"id="searchInput"placeholder="Type a movie name..">
+    <div id="results"></div>
+
+    <script>
+        let API="8ba02293"
+        let searchInput=document.getElementById("searchInput");
+        let results=document.getElementById("results");
+          let debounceTime;
+
+        function debounce(func,delay){
+            return function(...args){
+                clearTimeout(debounceTime);
+                debounceTime=setTimeout(()=>func.apply(this,args),delay);
+            }
+        }
+        async function fetchMovies(query){
+            if (!query){
+                results.innerHTML="";
+                return;
+            }
+            try{
+           const res = await fetch(`http://www.omdbapi.com/?apikey=${API}&s=${query}`);
+                const data= await res.json();
+
+                results.innerHTML="";
+                if (data.Search){
+                    data.Search.forEach(movie=>{
+                        const div=document.createElement("div");
+                        div.className="movie";
+                        div.textContent=movie.Title;
+                        results.appendChild(div);
+
+                    })
+                }
+                else{
+                   results.innerHTML="No result  found"; 
+                }
+
+            }
+            catch(err){
+                results.innerHTML=`<p>Error fetching data</p>`
+            }
+        }
+        searchInput.addEventListener("input",debounce((e)=>{
+            fetchMovies(e.target.value.trim())
+        },500))
+    </script>
+</body>
+</html>
