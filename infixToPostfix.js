@@ -1,3 +1,22 @@
+
+/*You are given a postfix expression (also known as Reverse Polish Notation). Your task is to convert it into a fully parenthesized infix expression.
+
+In a postfix expression, each operator follows its operands.
+For example, the infix expression a + b is written as ab+ in postfix.
+
+A fully parenthesized infix expression explicitly shows the order of operations using parentheses.
+For example, a + b * c becomes (a+(b*c)) when fully parenthesized.
+
+🔧 Input Format
+
+A single line containing a valid postfix expression.
+
+The expression contains:
+
+Lowercase English letters (a to z) representing operands.
+
+Operators: +, -, *, /, ^ */
+
 function runProgram(input) {
  let stack = [];
     let operators = new Set(['+', '-', '*', '/', '^']);
