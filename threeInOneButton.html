@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <img src="" alt="">
+    <button id="threeInOne">Click here</button>
+    <div class="counter">Normal count :<span id="normalCount">0</span></div>
+    <script>
+        let normalCount=0;
+        let debounceCount=0;
+
+        function debounce(func,delay){
+            let timeout;
+            return function (...args){
+                clearTimeout(timeout);
+                timeout=setTimeout(()=>func.apply(this,args),delay);
+            }
+        }
+        const debounceIncrement=debounce(()=>{
+            de
+        })
+
+        document.getElementById("threeInOne").addEventListener("click",()=>{
+            normalCount++;
+        })
+
+
+
+    </script>
+</body>
+</html>

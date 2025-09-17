@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Signup page</h1>
+    <form id="signupForm">
+        <input type="text"id="username"placeholder="Enter user email">
+        <input type="text" id="password" placeholder="Enter password">
+        <input type="submit" value="signup">
+    </form>
+   
+</body>
+</html>
+ <script>
+   document.querySelector("#signupForm").addEventListener("submit",register)
+        function register(){
+            event.preventDefault()
+            let email=document.getElementById("username").value;
+            let password=document.getElementById("password").value;
+            let APIKEY="AIzaSyA9Rlo-boXd3qx_oRMz5oPRJxpKkOWUKow";
+
+            var myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+
+
+            const payload=JSON.stringify({
+                email:email,
+                password:password
+            });
+          const requestOptions={
+            method:"POST",
+            body:payload,
+             headers: myHeaders,
+            redirect:"follow"
+          }
+          fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${APIKEY}`,requestOptions)
+          .then(response => response.text())
+        .then(result => console.log(result))
+         .catch(error => console.log('error', error));
+        }
+
+
+    </script>
