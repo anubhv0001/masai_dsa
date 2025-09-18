@@ -1,0 +1,107 @@
+<!--You will build a single-page web application that allows a user to browse famous quotes from a public API and save their favorites to a personal collection. The browsable quote feed will be dynamic with filtering and pagination, and the user's personal collection of quotes will be persisted using Firebase Realtime Database.
+
+etup & API Information
+Initial Files: You can assume you're starting with a basic index.html and style.css. Your primary focus is on the script.js file.
+Firebase: You must create a new Firebase project and set up the Realtime Database. Ensure your database rules are set to allow public read/write for this exercise.
+External Quote API: You will use the free Quotable API, which does not require an API key.
+Endpoint for fetching and filtering quotes: https://api.quotable.io/quotes?tags=TAG&page=PAGE&limit=10
+TAG can be technology etc , and page will be a numeric value
+Feature Requirements
+Your application should be built with the following features, implemented in a logical order.
+
+1. Fetch and Display Live Quote Feed
+When the page loads, fetch an initial set of quotes from the Quotable API (you can leave the tags parameter empty or use a default like "famous-quotes").
+Dynamically render each quote on the page as a "card". Each card should display the quote's content, the author, and a "Save Quote" button. This requires Advanced DOM Manipulation.
+2. Dynamic Filtering and Pagination
+Filtering by Tag: The UI should have buttons or a dropdown for different quote tags (e.g., "Technology", "Wisdom", "Life", "Success").
+When a user clicks a tag, the app must re-fetch quotes from the Quotable API for that specific tag and update the quote feed.
+The user's last selected tag must be saved to LocalStorage, so it's remembered when the page is reloaded.
+Pagination:
+Implement "Previous" and "Next" buttons to navigate through the pages of results from the Quotable API.
+Your fetch calls must be updated to include the current page number in the API request. Keep track of the current page number in your script.
+3. Persisting Quotes with Firebase Realtime DB
+Save a Quote (Create): When a user clicks the "Save Quote" button on an article, your application must save that quote's key information (e.g., content, author, and a savedAt timestamp) to your Firebase Realtime Database. This is equivalent to a POST operation.
+Display Saved Quotes (Read): Create a separate section on the page to display the list of saved quotes. This list should listen for changes in your Firebase database and update in real-time.
+Remove a Quote (Delete): Each saved quote in the list must have a "Remove" button. Clicking this button should delete the corresponding entry from your Firebase Realtime Database. This is equivalent to a DELETE operation.
+4. Sorting the Saved Quotes
+Add a dropdown or buttons to sort the user's saved quotes.
+Implement sorting by the savedAt timestamp, allowing the user to see the "Newest First" or "Oldest First". This sorting logic will be performed on the client-side after fetching the data from Firebase.-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+ <h1>Quote collector</h1>
+    <div id ="filters">
+        <button onclick="changeTag('technology')">Technology</button>
+        <button onclick="changeTag('Wisdom')">Wisdom</button>
+        <button onclick="changeTag('life')">life</button>
+         <button onclick="changeTag('success')">Success</button>
+    </div>
+    <div id="quotes"></div>
+
+    <div id="pagination">
+        <button onclick="prevPage()">Previous</button>
+        <span id="page-number">1</span>
+        <button onclick="nextPage()">Next</button>
+    </div>
+    <h2>Saved quotes</h2>
+    <div id="saved-quotes"></div>
+</body>
+<script>
+    let currentPage=1;
+    let currentTag=localStorage.getItem("lastTag")||"famous-quotes";
+
+    const quotesContainer=document.getElementById("quotes");
+    const savedContainer=document.getElementById("saved-quotes");
+    const pageNumber=document.getElementById("page-numer");
+
+    async function  fetchQuottes() {
+        const url="https://api.quotable.io/quotes?tags=currentTag&page=currentPage&limit=10"
+        try{
+            const res=await fetch(url);
+            const data=await res.json();
+            displayQuotes(data.results);
+            pageNumber.textContent=currentPage;
+        }
+        catch(err){
+            console.log("err");
+        }
+    }
+    function displayQuotes(){
+        quotesContainer.innerHTML="";
+        quotes.forEach((q)=>{
+            const card=document.createElement("div");
+            card.className="quote-card";
+            card.innerHTML=`
+            <p>"${q.content}"</p>
+<small>${q.author}</small>
+<button onclick='saveQuote(${JSON.stringify(q)})'>Save quote</button>
+            `;
+            quotesContainer.appendChild(card);
+        })
+    }
+
+    function saveQuote(q){
+        let savedQuote=JSON.parse(localStorage.getItem("savedQutes"))||[];
+        savedQuote.push({...q,savedAt:Date.now()});
+        localStorage.setItem("savedQuotes",JSON.stringify(saveQuotes));
+        displayQuotes();
+    }
+  function nextPage(){
+        currentPage++;
+        fetchQuottes()
+    }
+    function prevPage(){
+        if (currentPage>1){
+            currentPage--;
+            fetchQuottes();
+        }
+    }
+    fetchQuottes();
+    displayQuotes();
+</script>
+</html>
