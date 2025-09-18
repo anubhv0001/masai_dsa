@@ -41,7 +41,7 @@ Implement sorting by the savedAt timestamp, allowing the user to see the "Newest
         <button onclick="changeTag('life')">life</button>
          <button onclick="changeTag('success')">Success</button>
     </div>
-    <div id="quotes"></div>
+    <div id="quotesContainer"></div>
 
     <div id="pagination">
         <button onclick="prevPage()">Previous</button>
@@ -55,9 +55,9 @@ Implement sorting by the savedAt timestamp, allowing the user to see the "Newest
     let currentPage=1;
     let currentTag=localStorage.getItem("lastTag")||"famous-quotes";
 
-    const quotesContainer=document.getElementById("quotes");
+    const quotesContainer=document.getElementById("quotesContainer");
     const savedContainer=document.getElementById("saved-quotes");
-    const pageNumber=document.getElementById("page-numer");
+    const pageNumber=document.getElementById("page-number");
 
     async function  fetchQuottes() {
         const url="https://api.quotable.io/quotes?tags=currentTag&page=currentPage&limit=10"
@@ -71,15 +71,15 @@ Implement sorting by the savedAt timestamp, allowing the user to see the "Newest
             console.log("err");
         }
     }
-    function displayQuotes(){
+    function displayQuotes(quotes){
         quotesContainer.innerHTML="";
         quotes.forEach((q)=>{
             const card=document.createElement("div");
             card.className="quote-card";
             card.innerHTML=`
             <p>"${q.content}"</p>
-<small>${q.author}</small>
-<button onclick='saveQuote(${JSON.stringify(q)})'>Save quote</button>
+                   <small>${q.author}</small>
+                <button onclick='saveQuote(${JSON.stringify(q)})'>Save quote</button>
             `;
             quotesContainer.appendChild(card);
         })
