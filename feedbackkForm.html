@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit feedback form</title>
+</head>
+<style>
+  * {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+  }
+
+  body {
+    background: #f7f9fc;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    min-height: 100vh;
+  }
+
+  form {
+    background-color: #fff;
+    padding: 25px 30px;
+    margin-top: 60px;
+    border-radius: 8px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 400px;
+  }
+
+  h1 {
+    text-align: center;
+    margin-top: 40px;
+    color: #333;
+  }
+
+  input[type="text"],
+  textarea {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    resize: none;
+    font-size: 16px;
+  }
+
+  textarea {
+    height: 100px;
+  }
+
+  button {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  button:hover {
+    background-color: #0056b3;
+  }
+
+  #responseMessage {
+    text-align: center;
+    margin-top: 15px;
+    font-weight: bold;
+    color: #444;
+  }
+
+  @media (max-width: 480px) {
+    form {
+      margin: 20px;
+    }
+  }
+</style>
+<body>
+    
+    <form id="feedback_form">
+        <input type="text" id="username" placeholder="Enter username">
+        <textarea id="message" placeholder="Enter message"></textarea>
+        <button type="submit">Submit</button>
+
+
+    </form>
+
+
+    <p id="responseMessage"></p>
+    <script>
+        document.getElementById("feedback_form").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const username = document.getElementById("username").value.trim();
+            const message = document.getElementById("message").value.trim();
+            const responseMessage = document.getElementById("responseMessage")
+
+            if (!username || !message) {
+                responseMessage.textContent = "Please fill in all fields.";
+                return;
+            }
+
+            const feedback = {
+                username: username,
+                message: message
+            };
+        try{
+                const res = await fetch("https://submitform-c7d5b-default-rtdb.firebaseio.com/feedback.json", {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(feedback)
+                })
+                if (res.ok) {
+                    responseMessage.textContent = "Feedback submitted successfully!";
+                    document.getElementById("feedback_form").reset();
+                }
+                else {
+                    throw new Error("Failed to submit feedback.");
+                }
+            }
+            catch(err){
+                    responseMessage.textContent = "Error: " + error.message;
+                    responseMessage.style.color = "red";
+                }
+            });
+    </script>
+</body>
+
+</html>
