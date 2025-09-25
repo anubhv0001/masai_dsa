@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+<body>
+     <title>Fitness buddy</title>
+    <div id="auth">
+  <input type="text"id="email"placeholder="Email">
+  <input type="password"id="password"placeholder="Password">
+  <button onclick="register()">Register</button>
+  <button onclick="login()">Login</button>
+    </div>
+    
+    <!--Profile-->
+    <div id="profile">
+        <h2>Profile Setup</h2>
+        <input type="text"id="name"placeholder="Name">
+        <input type="number"id="age"placeholder="Age">
+        <input type="number"id="height"placeholder="Height(cm)">
+        <input type="number"id="weight"placeholder="Weight(cm)">
+        <input type="text"id="goal"placeholder="Fitness Goal">
+        <button onclick="saveProfile()">save Profile</button>
+        </div>
+
+        <!--Workout-->
+        <div id="workout"style="display:none;">
+            <h2>Workout log</h2>
+            <input type="text"id="wtype"placeholder="Workout Type (Run,Gym)">
+            <input type="number"id="wduration"placeholder="Duration(min)">
+            <button></button>
+
+        </div>
+</body>
+</html>

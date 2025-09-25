@@ -1,0 +1,174 @@
+<!--
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyDwEnWMXfIUVteTBZbYYtDf_dzG-5ztpmQ",
+  authDomain: "bookmarkrepoapp.firebaseapp.com",
+  projectId: "bookmarkrepoapp",
+  storageBucket: "bookmarkrepoapp.firebasestorage.app",
+  messagingSenderId: "1022799669552",
+  appId: "1:1022799669552:web:778f48ca4f61e5c680c0f5",
+  measurementId: "G-C221M56CT9"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+-->
+
+<!--1. User Authentication (Firebase)
+When the page loads, if the user is not logged in, only a Sign Up/Login form should be visible.
+Implement user registration and login functionality using Firebase Authentication via Realtime DB.
+Once a user successfully logs in, hide the auth form and display the main application interface (the search and stash sections).
+A "Logout" button should also be available for logged-in users.
+2. Live Repository Search (Fetch & Debouncing)
+The main interface for a logged-in user should feature a search input field.
+As the user types into this field, you must make GET requests to the GitHub Search API to find repositories matching the query.
+Crucial Requirement: The search input must be debounced. An API call should only be made after the user has stopped typing for a brief period (e.g., 400-500ms) to avoid rate-limiting and excessive requests.
+Display the results of the search in a list. Each item should show the repository's full name (e.g., facebook/react) and have a "Stash" button.
+3. Stashing Repositories (Firebase & HTTP Methods)
+When a logged-in user clicks the "Stash" button on a search result, you must save the repository's information to your Firebase database (Firestore is recommended).
+Create a collection (e.g., stashedRepos) where each document contains the repo's full_name, html_url, and the userId of the user who stashed it.
+Security: You must configure the Firebase Realtime DB as such , to ensure that users can only create, read, and delete their own stashed repo documents.
+4. Displaying the Stash List (DOM Manipulation)
+Create a separate area on the page titled "My Stashed Repos."
+This area should fetch and display the list of repositories that the currently logged-in user has saved in Firebase.
+This list should update whenever the user stashes a new repository.
+5. Persistence with LocalStorage
+To improve user experience, save the user's last search query to LocalStorage.
+When a logged-in user loads the application, the search input field should be pre-populated with their last search term.-->
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Github repo bookmarking app</title>
+</head>
+<body>
+   <h1>Github Repo Stash</h1> 
+   <div id="auth">
+    <h2>Login/Signup</h2>
+  <input type="email"id="email"placeholder="Enter email..">
+    <input type="password"id="password"placeholder="Enter password..">
+    <button id="signupBtn">Sign Up</button>
+    <button id="loginBtn">Login</button>
+</div>
+
+<div id="app"style="display:none">
+    <button id="logoutBtn">Logout</button>
+    <h2>Search Repositories</h2>
+    <input type="text"id="searchInput"placeholder="Search Github repositories">
+    <div id="results"></div>
+
+    <h2>My stashed repos</h2>
+    <div id="stash"></div>
+</div>
+
+
+<script>
+  // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyDwEnWMXfIUVteTBZbYYtDf_dzG-5ztpmQ",
+  authDomain: "bookmarkrepoapp.firebaseapp.com",
+  projectId: "bookmarkrepoapp",
+  storageBucket: "bookmarkrepoapp.firebasestorage.app",
+  messagingSenderId: "1022799669552",
+  appId: "1:1022799669552:web:778f48ca4f61e5c680c0f5",
+  measurementId: "G-C221M56CT9"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+const authDiv=document.getElementById("auth")
+const appDiv=document.getElementById("app")
+const signupBtn=document.getElementById("signupBtn")
+const loginBtn=document.getElementById("loginBtn")
+const logoutBtn=document.getElementById("logoutBtn")
+const emailInput=document.getElementById("email")
+const passwordInput=document.getElementById("password")
+const searchInput=document.getElementById("searchInput")
+const resultDiv=document.getElementById("results")
+const stashDiv=document.getElementById("stash")
+
+let currentUser=null;
+
+signupBtn.onclick=()=>{
+    auth.creatUserWithEmailAndPassword(emailInput.value,passwordInput.value)
+    .catch(e=>alert(e.message))
+}
+loginBtn.onclick=()=>{
+    auth.signInWithEmailAndPassword(emailInput.value,passwordInput.value)
+    .catch(e=>alert(e.message))
+}
+logoutBtn.onclick=()=>auth.signOut();
+
+auth.onAuthStateChanged(user=>{
+    if (user){
+        currentUser=user;
+        authDiv.style.display="none";
+        appDiv.style.display="block";
+        loadStash();
+        const lastQuery=localStorage.getItem("lastQuery");
+        if (lastQuery){
+            searchInput.value=lastQuery;
+            searchRepos(lastQuery);
+        }
+
+    }
+    else{
+        currentUser=null;
+        authDiv.style.display="block";
+        appDiv.style.display="none";
+    }
+})
+async function searchRepos(query) {
+    resultDiv.innerHTML="Searching repos..."
+    try{
+        const res=await fetch(`https://api.github.com/search/repositories?q=${query}`)
+        const data=await res.json();
+        resultDiv.innerHTML="";
+        data.items.forEach(repo=>{
+            div.innerHTML=`
+            <a href="${repo.html_url}${repo.full_name}"></a>
+              <button>stash</button>
+            `
+            resultDiv.appendChild(div);
+        });
+    }
+    catch(err){
+        resultDiv.innerHTML="Error fetching results";
+    }
+
+}
+async function StashRepo(repo){
+    if(!currentUser)return;
+    await db.collection("StashedRepos").add({
+        full_name:repo.full_name,
+        html_url:repo.html_url,
+        userId:currentUser.uid
+    });
+    loadStash();
+}
+
+
+</script>
+</body>
+</html>
