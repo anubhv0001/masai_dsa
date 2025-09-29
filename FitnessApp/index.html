@@ -1,36 +1,476 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  </head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FitnessBuddy — Protote</title>
+  <style>
+    :root {
+      --card: #fff;
+      --bg: #f4f7fb;
+      --accent: #2563eb
+    }
+
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background: var(--bg);
+      margin: 0;
+      padding: 24px
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto
+    }
+
+    .card {
+      background: var(--card);
+      padding: 16px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+      margin-bottom: 16px
+    }
+
+    h1 {
+      margin: 0 0 12px
+    }
+
+    label {
+      display: block;
+      margin: 8px 0 4px;
+      font-size: 13px
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 8px
+    }
+
+    .cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px
+    }
+
+    button {
+      background: var(--accent);
+      color: #fff;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer
+    }
+
+    .muted {
+      color: #666;
+      font-size: 13px
+    }
+
+    .list {
+      max-height: 200px;
+      overflow: auto
+    }
+
+    .user-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px;
+      border-bottom: 1px solid #f0f0f0
+    }
+
+    .small {
+      font-size: 12px
+    }
+
+    .badge {
+      background: #eef2ff;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 12px
+    }
+  </style>
+</head>
+
 <body>
-     <title>Fitness buddy</title>
-    <div id="auth">
-  <input type="text"id="email"placeholder="Email">
-  <input type="password"id="password"placeholder="Password">
-  <button onclick="register()">Register</button>
-  <button onclick="login()">Login</button>
+  <div class="container">
+    <h1>FitnessBuddy</h1>
+  div class="card" id="authCard">
+      <h2 id="authTitle">Register / Login</h2>
+      <div id="authForms">
+        <label>Email</label>
+        <input id="email" type="email" />
+        <label>Password</label>
+        <input id="password" type="password" />
+        <div style="margin-top:8px;display:flex;gap:8px">
+          <button id="registerBtn">Register</button>
+          <button id="loginBtn">Login</button>
+          <button id="logoutBtn" style="display:none;background:#ef4444">Logout</button>
+        </div>
+        <p class="muted"> <code>FIREBASE_DB_URL</code>
+          in the script to your DB root URL (e.g. https://your-app-default-rtdb.firebaseio.com)</p>
+        <div id="authMessage" class="muted"></div>
+      </div>
+    </div>   
+
+    <div class="card" id="profileCard" style="display:none">
+      <h2>Profile</h2>
+      <div class="cols">
+        <div>
+          <label>Full name</label>
+          <input id="fullname" />
+          <label>Location (city)</label>
+          <input id="location" />
+          <label>Preferred workouts (comma separated, e.g. running,yoga)</label>
+          <input id="workouts" />
+        </div>
+        <div>
+          <label>Height (cm)</label>
+          <input id="height" type="number" />
+          <label>Weight (kg)</label>
+          <input id="weight" type="number" />
+          <label>Target BMI</label>
+          <input id="targetBmi" type="number" step="0.1" />
+        </div>
+      </div>
+      <div style="margin-top:12px">
+        <button id="saveProfile">Save Profile</button>
+        <span id="profileMsg" class="muted"></span>
+      </div>
     </div>
-    
-    <!--Profile-->
-    <div id="profile">
-        <h2>Profile Setup</h2>
-        <input type="text"id="name"placeholder="Name">
-        <input type="number"id="age"placeholder="Age">
-        <input type="number"id="height"placeholder="Height(cm)">
-        <input type="number"id="weight"placeholder="Weight(cm)">
-        <input type="text"id="goal"placeholder="Fitness Goal">
-        <button onclick="saveProfile()">save Profile</button>
-        </div>
 
-        <!--Workout-->
-        <div id="workout"style="display:none;">
-            <h2>Workout log</h2>
-            <input type="text"id="wtype"placeholder="Workout Type (Run,Gym)">
-            <input type="number"id="wduration"placeholder="Duration(min)">
-            <button></button>
-
+    <div class="card" id="dashboardCard" style="display:none">
+      <h2>Dashboard</h2>
+      <div class="cols">
+        <div>
+          <p><strong>BMI:</strong> <span id="bmiVal">-</span> <span class="muted">(Current)</span></p>
+          <p><strong>Target BMI:</strong> <span id="bmiTarget">-</span></p>
+          <p><strong>Estimated days to target:</strong> <span id="daysToTarget">-</span></p>
         </div>
+        <div>
+          <p><strong>Weekly Workouts Logged:</strong> <span id="weeklyCount">0</span></p>
+          <p><strong>Total Calories Burnt (all-time):</strong> <span id="caloriesTotal">0</span></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="workoutCard" style="display:none">
+      <h2>Log Workout</h2>
+      <label>Type (running, cycling, yoga...)</label>
+      <input id="wType" />
+      <div class="cols">
+        <div>
+          <label>Duration (minutes)</label>
+          <input id="wDuration" type="number" />
+        </div>
+        <div>
+          <label>Intensity (low/medium/high)</label>
+          <select id="wIntensity">
+            <option value="low">low</option>
+            <option value="medium" selected>medium</option>
+            <option value="high">high</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-top:12px">
+        <button id="logWorkout">Log Workout</button>
+        <span id="logMsg" class="muted"></span>
+      </div>
+    </div>
+
+    <div class="card" id="buddiesCard" style="display:none">
+      <h2>Find Buddies</h2>
+      <label>Filter by workout</label>
+      <input id="filterWorkout" placeholder="running" />
+      <label>Filter by location</label>
+      <input id="filterLocation" placeholder="city" />
+      <div style="margin-top:8px"><button id="searchBuddies">Search</button></div>
+      <div class="list" id="buddiesList" style="margin-top:12px"></div>
+    </div>
+
+    <div class="card" id="challengesCard" style="display:none">
+      <h2>Challenges</h2>
+      <label>Challenge Title</label>
+      <input id="chTitle" />
+      <label>Description</label>
+      <input id="chDesc" />
+      <label>Goal (e.g. run 10 km this week)</label>
+      <input id="chGoal" />
+      <div style="margin-top:8px"><button id="createChallenge">Create Challenge</button></div>
+      <div class="list" id="chList" style="margin-top:12px"></div>
+    </div>
+
+    <div class="card" id="messagesCard" style="display:none">
+      <h2>Messages</h2>
+      <label>Choose Buddy</label>
+      <select id="chooseBuddy"></select>
+      <label>Message</label>
+      <textarea id="messageText"></textarea>
+      <div style="margin-top:8px"><button id="sendMessage">Send</button></div>
+      <div class="list" id="messagesList" style="margin-top:12px"></div>
+    </div>
+
+  </div>
+
+  <script>
+
+    const FIREBASE_DB_URL = "https://fitnessbuddyapp-5e008-default-rtdb.firebaseio.com";
+
+
+    let currentUser = JSON.parse(localStorage.getItem('fb_user') || 'null');
+
+    const authMessage = document.getElementById('authMessage');
+    const authCard = document.getElementById('authCard');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    function show(msg, el) { el.textContent = msg }
+
+    function toggleAuthUI() {
+      if (currentUser) {
+        document.getElementById('authForms').style.display = 'none';
+        logoutBtn.style.display = 'inline-block';
+        document.getElementById('profileCard').style.display = 'block';
+        document.getElementById('dashboardCard').style.display = 'block';
+        document.getElementById('workoutCard').style.display = 'block';
+        document.getElementById('buddiesCard').style.display = 'block';
+        document.getElementById('challengesCard').style.display = 'block';
+        document.getElementById('messagesCard').style.display = 'block';
+        loadProfileIntoForm();
+        refreshDashboard();
+        loadBuddiesOptions();
+        loadChallenges();
+      } else {
+        document.getElementById('authForms').style.display = 'block';
+        logoutBtn.style.display = 'none';
+        document.getElementById('profileCard').style.display = 'none';
+        document.getElementById('dashboardCard').style.display = 'none';
+        document.getElementById('workoutCard').style.display = 'none';
+        document.getElementById('buddiesCard').style.display = 'none';
+        document.getElementById('challengesCard').style.display = 'none';
+        document.getElementById('messagesCard').style.display = 'none';
+      }
+    }
+
+    toggleAuthUI();
+    document.getElementById('registerBtn').addEventListener('click', async () => {
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+      if (!email || !password) { show('Provide email and password', authMessage); return }
+      const uid = 'u' + Date.now();
+      const userObj = { uid, email, createdAt: Date.now() };
+      const res = await fetch(`${FIREBASE_DB_URL}/users/${uid}.json`, {
+        method: 'PUT', body: JSON.stringify(userObj)
+      });
+      if (res.ok) {
+        currentUser = userObj; localStorage.setItem('fb_user', JSON.stringify(currentUser));
+        show('Registered and logged in', authMessage); toggleAuthUI();
+      } else show('Registration failed', authMessage);
+    });
+
+    document.getElementById('loginBtn').addEventListener('click', async () => {
+      const email = document.getElementById('email').value.trim();
+      if (!email) { show('Provide email', authMessage); return }
+      const res = await fetch(`${FIREBASE_DB_URL}/users.json`);
+      const data = await res.json();
+      const users = data || {};
+      const found = Object.values(users).find(u => u.email === email);
+      if (found) { currentUser = found; localStorage.setItem('fb_user', JSON.stringify(currentUser)); show('Logged in', authMessage); toggleAuthUI(); }
+      else show('No user found with that email', authMessage);
+    });
+
+    logoutBtn.addEventListener('click', () => { localStorage.removeItem('fb_user'); currentUser = null; show('Logged out', authMessage); toggleAuthUI(); });
+
+    document.getElementById('saveProfile').addEventListener('click', async () => {
+      const fullname = document.getElementById('fullname').value.trim();
+      const location = document.getElementById('location').value.trim();
+      const workouts = document.getElementById('workouts').value.trim();
+      const height = Number(document.getElementById('height').value);
+      const weight = Number(document.getElementById('weight').value);
+      const targetBmi = Number(document.getElementById('targetBmi').value);
+      if (!fullname || !location) { document.getElementById('profileMsg').textContent = 'Name and location required.'; return }
+      const profile = { fullname, location, workouts, height, weight, targetBmi };
+      const res = await fetch(`${FIREBASE_DB_URL}/profiles/${currentUser.uid}.json`, { method: 'PUT', body: JSON.stringify(profile) });
+      if (res.ok) { document.getElementById('profileMsg').textContent = 'Profile saved.'; currentUser.profile = profile; localStorage.setItem('fb_user', JSON.stringify(currentUser)); refreshDashboard(); loadBuddiesOptions(); }
+      else document.getElementById('profileMsg').textContent = 'Failed to save.';
+    });
+
+    async function loadProfileIntoForm() {
+      if (!currentUser) return;
+      const res = await fetch(`${FIREBASE_DB_URL}/profiles/${currentUser.uid}.json`);
+      const profile = await res.json();
+      if (profile) { document.getElementById('fullname').value = profile.fullname || ''; document.getElementById('location').value = profile.location || ''; document.getElementById('workouts').value = profile.workouts || ''; document.getElementById('height').value = profile.height || ''; document.getElementById('weight').value = profile.weight || ''; document.getElementById('targetBmi').value = profile.targetBmi || ''; currentUser.profile = profile; localStorage.setItem('fb_user', JSON.stringify(currentUser)); }
+    }
+
+    // BMI 
+    function calculateBMI(weightKg, heightCm) { if (!weightKg || !heightCm) return null; const m = heightCm / 100; return +(weightKg / (m * m)).toFixed(1); }
+    function estimateCalories(type, minutes, intensity) {
+      // Very rough MET lookup
+      const baseMET = { running: 9.8, cycling: 7.5, walking: 3.5, yoga: 3, strength: 6 };
+      const t = type.toLowerCase();
+      const met = baseMET[t] || 5; 
+      let intensityFactor = 1;
+      if (intensity === 'low') intensityFactor = 0.8; if (intensity === 'high') intensityFactor = 1.2;
+      const weight = currentUser?.profile?.weight || 70;
+      const kcal = met * weight * (minutes / 60) * intensityFactor;
+      return Math.round(kcal);
+    }
+
+    async function refreshDashboard() {
+      if (!currentUser) return;
+      const profile = currentUser.profile || {};
+      const bmi = calculateBMI(profile.weight, profile.height);
+      document.getElementById('bmiVal').textContent = bmi || '-';
+      document.getElementById('bmiTarget').textContent = profile.targetBmi || '-';
+
+      const res = await fetch(`${FIREBASE_DB_URL}/workouts/${currentUser.uid}.json`);
+      const data = await res.json() || {};
+      const workouts = Object.values(data);
+      const caloriesTotal = workouts.reduce((s, w) => s + (w.calories || 0), 0);
+      document.getElementById('caloriesTotal').textContent = caloriesTotal;
+
+
+      const oneWeek = Date.now() - 7 * 24 * 3600 * 1000;
+      const weeklyCount = workouts.filter(w => w.createdAt > oneWeek).length;
+      document.getElementById('weeklyCount').textContent = weeklyCount;
+
+      // Project days to target BMI
+      const targetBmi = Number(profile.targetBmi);
+      if (bmi && targetBmi && targetBmi < bmi) {
+        // estimate kg to lose = currentWeight - weightAtTargetBMI
+        const heightM = profile.height / 100;
+        const targetWeight = targetBmi * (heightM * heightM);
+        const kgToLose = profile.weight - targetWeight;
+        if (kgToLose <= 0) document.getElementById('daysToTarget').textContent = 'Already at/under target';
+        else {
+          // assume average daily calorie deficit based on logged workouts: average calories per day
+          const first = workouts[0];
+          const daysTracked = Math.max(1, Math.ceil((Date.now() - (workouts[workouts.length - 1]?.createdAt || Date.now())) / (24 * 3600 * 1000)));
+          const avgDailyBurn = Math.round(caloriesTotal / Math.max(1, Math.ceil((Date.now() - (workouts[0]?.createdAt || Date.now())) / (24 * 3600 * 1000))));
+          // To lose 1 kg ~ 7700 kcal
+          const totalKcalNeeded = Math.round(kgToLose * 7700);
+          const days = Math.ceil(totalKcalNeeded / Math.max(1, avgDailyBurn));
+          document.getElementById('daysToTarget').textContent = isFinite(days) ? days + ' days (estimate)' : '-';
+        }
+      } else document.getElementById('daysToTarget').textContent = '-';
+    }
+
+    // Logging workouts
+    document.getElementById('logWorkout').addEventListener('click', async () => {
+      const type = document.getElementById('wType').value.trim();
+      const duration = Number(document.getElementById('wDuration').value);
+      const intensity = document.getElementById('wIntensity').value;
+      if (!type || !duration) { document.getElementById('logMsg').textContent = 'Type and duration required'; return }
+      const calories = estimateCalories(type, duration, intensity);
+      const payload = { type, duration, intensity, calories, createdAt: Date.now() };
+      const res = await fetch(`${FIREBASE_DB_URL}/workouts/${currentUser.uid}.json`, { method: 'POST', body: JSON.stringify(payload) });
+      if (res.ok) { document.getElementById('logMsg').textContent = `Logged. Calories: ${calories}`; refreshDashboard(); }
+      else document.getElementById('logMsg').textContent = 'Failed to log';
+    });
+
+    // Find buddies
+    document.getElementById('searchBuddies').addEventListener('click', async () => {
+      const filterWorkout = document.getElementById('filterWorkout').value.trim().toLowerCase();
+      const filterLocation = document.getElementById('filterLocation').value.trim().toLowerCase();
+      const res = await fetch(`${FIREBASE_DB_URL}/profiles.json`);
+      const data = await res.json() || {};
+      const profiles = Object.entries(data).map(([uid, p]) => ({ uid, ...p }));
+      const results = profiles.filter(p => {
+        if (p.uid === currentUser.uid) return false;
+        const workoutMatch = filterWorkout ? (p.workouts || '').toLowerCase().includes(filterWorkout) : true;
+        const locMatch = filterLocation ? (p.location || '').toLowerCase().includes(filterLocation) : true;
+        return workoutMatch && locMatch;
+      });
+      const list = document.getElementById('buddiesList'); list.innerHTML = '';
+      results.forEach(r => {
+        const div = document.createElement('div'); div.className = 'user-row';
+        div.innerHTML = `<div><strong>${r.fullname || r.uid}</strong><div class='small'>${r.location || ''} • ${r.workouts || ''}</div></div><div><button data-uid='${r.uid}' class='msgBtn'>Message</button><button data-uid='${r.uid}' class='connectBtn' style='margin-left:6px'>Connect</button></div>`;
+        list.appendChild(div);
+      });
+      list.querySelectorAll('.msgBtn').forEach(b => b.addEventListener('click', (e) => { openChatWith(e.target.dataset.uid) }));
+      list.querySelectorAll('.connectBtn').forEach(b => b.addEventListener('click', async (e) => {
+        const toUid = e.target.dataset.uid;
+        // create match entry
+        await fetch(`${FIREBASE_DB_URL}/matches/${currentUser.uid}_${toUid}.json`, { method: 'PUT', body: JSON.stringify({ a: currentUser.uid, b: toUid, createdAt: Date.now() }) });
+        alert('Connection request saved. You can message now.'); loadBuddiesOptions();
+      }));
+    });
+
+    // Messaging: simple messages stored under messages/{chatId}. Use chatId = smallerUID_largerUID
+    function chatIdFor(a, b) { return [a, b].sort().join('_'); }
+    async function openChatWith(uid) {
+      document.getElementById('messagesCard').scrollIntoView();
+      document.getElementById('chooseBuddy').value = uid;
+      await loadMessages(uid);
+    }
+
+    async function loadBuddiesOptions() {
+      const res = await fetch(`${FIREBASE_DB_URL}/profiles.json`);
+      const data = await res.json() || {};
+      const profiles = Object.entries(data).map(([uid, p]) => ({ uid, ...p }));
+      const select = document.getElementById('chooseBuddy'); select.innerHTML = '';
+      profiles.filter(p => p.uid !== currentUser.uid).forEach(p => {
+        const opt = document.createElement('option'); opt.value = p.uid; opt.textContent = p.fullname || p.uid; select.appendChild(opt);
+      });
+    }
+
+    document.getElementById('sendMessage').addEventListener('click', async () => {
+      const to = document.getElementById('chooseBuddy').value;
+      const text = document.getElementById('messageText').value.trim();
+      if (!to || !text) return;
+      const id = chatIdFor(currentUser.uid, to);
+      const payload = { from: currentUser.uid, text, createdAt: Date.now() };
+      await fetch(`${FIREBASE_DB_URL}/messages/${id}.json`, { method: 'POST', body: JSON.stringify(payload) });
+      document.getElementById('messageText').value = '';
+      loadMessages(to);
+    });
+
+    async function loadMessages(toUid) {
+      const id = chatIdFor(currentUser.uid, toUid);
+      const res = await fetch(`${FIREBASE_DB_URL}/messages/${id}.json`);
+      const data = await res.json() || {};
+      const list = document.getElementById('messagesList'); list.innerHTML = '';
+      Object.values(data).sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0)).forEach(m => {
+        const div = document.createElement('div'); div.className = 'user-row';
+        div.innerHTML = `<div><strong>${m.from === currentUser.uid ? 'You' : m.from}</strong><div class='small'>${m.text}</div></div><div class='small'>${new Date(m.createdAt).toLocaleString()}</div>`;
+        list.appendChild(div);
+      });
+    }
+
+    // Challenges
+    document.getElementById('createChallenge').addEventListener('click', async () => {
+      const title = document.getElementById('chTitle').value.trim();
+      const desc = document.getElementById('chDesc').value.trim();
+      const goal = document.getElementById('chGoal').value.trim();
+      if (!title || !goal) return;
+      const payload = { title, desc, goal, createdBy: currentUser.uid, createdAt: Date.now() };
+      await fetch(`${FIREBASE_DB_URL}/challenges.json`, { method: 'POST', body: JSON.stringify(payload) });
+      loadChallenges();
+    });
+
+    async function loadChallenges() {
+      const res = await fetch(`${FIREBASE_DB_URL}/challenges.json`);
+      const data = await res.json() || {};
+      const list = document.getElementById('chList'); list.innerHTML = '';
+      Object.entries(data).forEach(([id, c]) => {
+        const div = document.createElement('div'); div.className = 'user-row';
+        div.innerHTML = `<div><strong>${c.title}</strong><div class='small'>${c.goal}</div></div><div><button data-id='${id}' class='joinCh'>Join</button></div>`;
+        list.appendChild(div);
+      });
+      list.querySelectorAll('.joinCh').forEach(b => b.addEventListener('click', async (e) => {
+        const id = e.target.dataset.id;
+        await fetch(`${FIREBASE_DB_URL}/challenge_members/${id}/${currentUser.uid}.json`, { method: 'PUT', body: JSON.stringify({ uid: currentUser.uid, joinedAt: Date.now() }) });
+        alert('Joined challenge');
+      }));
+    }
+
+    // initial load if logged in
+    (async function () { if (currentUser) { await loadProfileIntoForm(); toggleAuthUI(); } })();
+  </script>
 </body>
+
 </html>
