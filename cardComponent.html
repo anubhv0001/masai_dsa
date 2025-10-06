@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+<div id="root"></div>
+
+<!-- React and ReactDOM CDN -->
+<script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/babel-standalone@7/babel.min.js"></script>
+
+<!-- Your React code -->
+<script type="text/babel">
+  const Card = ({ title, children }) => {
+    return (
+      <div className="card">
+        <h2>{title}</h2>
+        <div>{children}</div>
+      </div>
+    );
+  };
+
+  const App = () => {
+    return (
+      <div>
+        <Card title="Card 1">
+          <p>This is the content of the first card. You can put any JSX here!</p>
+        </Card>
+
+        <Card title="Card 2">
+          <ul>
+            <li>Item 1</li>
+            <li>Item 2</li>
+            <li>Item 3</li>
+          </ul>
+        </Card>
+
+        <Card title="Card 3">
+          <p>
+            Another card with <strong>dynamic content</strong> inside the card body.
+          </p>
+        </Card>
+      </div>
+    );
+  };
+
+  const root = ReactDOM.createRoot(document.getElementById("root"));
+  root.render(<App />);
+</script>
+</body>
+</html>
