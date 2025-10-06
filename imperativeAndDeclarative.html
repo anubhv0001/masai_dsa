@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Declarative vs Imperative</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    h2 {
+      color: #2563eb;
+    }
+    .container {
+      display: flex;
+      gap: 50px;
+    }
+    .box {
+      border: 1px solid #ddd;
+      padding: 20px;
+      border-radius: 8px;
+      width: 45%;
+    }
+  </style>
+</head>
+<body>
+  <h1>Difference Between Declarative and Imperative Programming</h1>
+  <div class="container">
+    
+    <!-- Imperative Section -->
+    <div class="box">
+      <h2>Imperative Approach (Vanilla JS)</h2>
+      <div id="imperative-root"></div>
+    </div>
+    
+    <!-- Declarative Section -->
+    <div class="box">
+      <h2>Declarative Approach (React)</h2>
+      <div id="declarative-root"></div>
+    </div>
+  </div>
+
+  <!-- Imperative Script -->
+  <script>
+    // Step by step DOM manipulation
+    const imperativeRoot = document.getElementById("imperative-root");
+    const p = document.createElement("p");
+    p.textContent = "Hello, World! (Imperative)";
+    imperativeRoot.appendChild(p);
+  </script>
+
+  <!-- React & ReactDOM CDN -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+  <!-- Declarative Script -->
+  <script>
+    // Describe UI, React handles rendering
+  const ele=React.createElement("p",null,"Created root element")
+    const reactRoot=ReactDOM.createRoot(document.getElementById("declarative-root"))
+    declarativeRoot.render(element);
+  </script>
+</body>
+</html>

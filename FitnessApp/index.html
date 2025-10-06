@@ -100,7 +100,7 @@
 <body>
   <div class="container">
     <h1>FitnessBuddy</h1>
-  div class="card" id="authCard">
+ <div class="card" id="authCard">
       <h2 id="authTitle">Register / Login</h2>
       <div id="authForms">
         <label>Email</label>
@@ -112,8 +112,7 @@
           <button id="loginBtn">Login</button>
           <button id="logoutBtn" style="display:none;background:#ef4444">Logout</button>
         </div>
-        <p class="muted"> <code>FIREBASE_DB_URL</code>
-          in the script to your DB root URL (e.g. https://your-app-default-rtdb.firebaseio.com)</p>
+       
         <div id="authMessage" class="muted"></div>
       </div>
     </div>   
@@ -309,7 +308,7 @@
     // BMI 
     function calculateBMI(weightKg, heightCm) { if (!weightKg || !heightCm) return null; const m = heightCm / 100; return +(weightKg / (m * m)).toFixed(1); }
     function estimateCalories(type, minutes, intensity) {
-      // Very rough MET lookup
+     
       const baseMET = { running: 9.8, cycling: 7.5, walking: 3.5, yoga: 3, strength: 6 };
       const t = type.toLowerCase();
       const met = baseMET[t] || 5; 
@@ -341,7 +340,7 @@
       // Project days to target BMI
       const targetBmi = Number(profile.targetBmi);
       if (bmi && targetBmi && targetBmi < bmi) {
-        // estimate kg to lose = currentWeight - weightAtTargetBMI
+       
         const heightM = profile.height / 100;
         const targetWeight = targetBmi * (heightM * heightM);
         const kgToLose = profile.weight - targetWeight;
