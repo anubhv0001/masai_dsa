@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Virtual DOM Demo</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+     <h1 id="page-title">Hello World</h1>
+    <div id="root"></div>
+     <script type="text/babel">
+    
+        let vanillaCount = 0;
+
+        function changeTitleVanilla() {
+            const titleEl = document.getElementById('page-title');
+            titleEl.innerText = "Vanilla JS Title " + (++vanillaCount);
+        }
+
+    
+        function App() {
+            const [title, setTitle] = React.useState("Hello World");
+            const [reactCount, setReactCount] = React.useState(0);
+
+            function changeTitleReact() {
+                setTitle("React Title " + (reactCount + 1));
+                setReactCount(reactCount + 1);
+            }
+
+            return (
+                <div>
+                    <button onClick={changeTitleVanilla}>Change Title (Vanilla JS)</button>
+                    <button onClick={changeTitleReact} style={{marginLeft: '10px'}}>Change Title (React)</button>
+                    <p>Vanilla DOM Updates: {vanillaCount}</p>
+                    <p>React DOM Updates: {reactCount}</p>
+                    <h2>{title}</h2>
+                </div>
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+    </script>
+
+</head>
+<body>
+    
+</body>
+</html>
