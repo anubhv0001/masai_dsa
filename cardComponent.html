@@ -1,32 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reusable Card Component</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      padding: 32px;
+    }
+
+    .card {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 16px;
+      margin: 16px 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      background-color: #fff;
+    }
+
+    .card h2 {
+      margin: 0 0 12px 0;
+      font-size: 1.5rem;
+      color: #333;
+    }
+
+    .card p, .card li {
+      font-size: 1rem;
+      color: #555;
+    }
+  </style>
 </head>
 <body>
-    
+
 <div id="root"></div>
 
-<!-- React and ReactDOM CDN -->
 <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
 <script src="https://unpkg.com/babel-standalone@7/babel.min.js"></script>
 
-<!-- Your React code -->
 <script type="text/babel">
-  const Card = ({ title, children }) => {
-    return (
+  window.onload = function() {
+    const Card = ({ title, children }) => (
       <div className="card">
         <h2>{title}</h2>
         <div>{children}</div>
       </div>
     );
-  };
 
-  const App = () => {
-    return (
+    const App = () => (
       <div>
         <Card title="Card 1">
           <p>This is the content of the first card. You can put any JSX here!</p>
@@ -47,10 +70,11 @@
         </Card>
       </div>
     );
-  };
 
-  const root = ReactDOM.createRoot(document.getElementById("root"));
-  root.render(<App />);
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App />);
+  };
 </script>
+
 </body>
 </html>
