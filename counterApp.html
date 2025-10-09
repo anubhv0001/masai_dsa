@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React Counter App</title>
+    
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin-top: 60px;
+        background-color: #f4f4f9;
+      }
+      h1 {
+        color: #333;
+      }
+      button {
+        margin: 5px;
+        padding: 10px 18px;
+        font-size: 16px;
+        cursor: pointer;
+        border: none;
+        border-radius: 5px;
+        background-color: #007bff;
+        color: white;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+      button:active {
+        transform: scale(0.97);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      function CounterApp() {
+        const [count, setCount] = React.useState(0);
+
+        const handleIncrement = () => setCount(count + 1);
+        const handleDecrement = () => setCount(count - 1);
+        const handleReset = () => setCount(0);
+
+        return (
+          <div>
+            <h1>React Counter App</h1>
+            <h2>Current Count: {count}</h2>
+            <button onClick={handleIncrement}>Increment</button>
+            <button onClick={handleDecrement}>Decrement</button>
+            <button onClick={handleReset}>Reset</button>
+          </div>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(<CounterApp />);
+    </script>
+  </body>
+</html>
