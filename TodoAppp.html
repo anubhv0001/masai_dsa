@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React Todo List App</title>
+
+    <!-- React and ReactDOM (via CDN) -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <!-- Babel (for JSX support) -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f7fa;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        height: 100vh;
+      }
+
+      .container {
+        margin-top: 60px;
+        background: #fff;
+        padding: 25px 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        width: 350px;
+      }
+
+      h1 {
+        text-align: center;
+        color: #333;
+      }
+
+      input {
+        width: 70%;
+        padding: 8px;
+        margin-right: 8px;
+        font-size: 16px;
+      }
+
+      button {
+        padding: 8px 12px;
+        font-size: 16px;
+        cursor: pointer;
+        border: none;
+        border-radius: 4px;
+        background-color: #007bff;
+        color: white;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      li {
+        background: #f0f0f0;
+        margin: 6px 0;
+        padding: 8px;
+        border-radius: 5px;
+      }
+
+      .clear-btn {
+        background-color: #dc3545;
+        width: 100%;
+        margin-top: 10px;
+      }
+
+      .clear-btn:hover {
+        background-color: #b02a37;
+      }
+
+      .empty {
+        color: #777;
+        text-align: center;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      function TodoApp() {
+        const [tasks, setTasks] = React.useState(["Buy milk", "Study React"]);
+        const [newTask, setNewTask] = React.useState("");
+
+        const addTask = () => {
+          if (newTask.trim() === "") {
+            alert("Please enter a valid task!");
+            return;
+          }
+          setTasks([...tasks, newTask.trim()]);
+          setNewTask("");
+        };
+
+        const clearAll = () => {
+          setTasks([]);
+        };
+
+        return (
+          <div className="container">
+            <h1>Todo List</h1>
+
+            <div>
+              <input
+                type="text"
+                placeholder="Enter new task"
+                value={newTask}
+                onChange={(e) => setNewTask(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && addTask()}
+              />
+              <button onClick={addTask}>Add</button>
+            </div>
+
+            {tasks.length === 0 ? (
+              <p className="empty">No tasks available.</p>
+            ) : (
+              <ul>
+                {tasks.map((task, index) => (
+                  <li key={index}>{task}</li>
+                ))}
+              </ul>
+            )}
+
+            <button className="clear-btn" onClick={clearAll}>
+              Clear All
+            </button>
+          </div>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(<TodoApp />);
+    </script>
+  </body>
+</html>
