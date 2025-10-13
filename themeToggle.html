@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Theme Toggle App</title>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const ThemedBox = ({ theme, text }) => {
+      const style = {
+        backgroundColor: theme === 'light' ? '#f0f0f0' : '#333',
+        color: theme === 'light' ? '#333' : '#f0f0f0',
+        boxShadow: theme === 'light'
+          ? '2px 2px 10px rgba(0, 0, 0, 0.1)'
+          : '2px 2px 10px rgba(255, 255, 255, 0.1)'
+      };
+      return <div className="box" style={style}>{text}</div>;
+    };
+
+
+    const ThemeApp = () => {
+      const [theme, setTheme] = useState('light');
+
+    
+      useEffect(() => {
+        const saved = localStorage.getItem('theme');
+        if (saved) setTheme(saved);
+      }, []);
+
+    
+      useEffect(() => {
+        localStorage.setItem('theme', theme);
+      }, [theme]);
+
+      const toggleTheme = () => {
+        setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
+      };
+
+      return (
+        <div className={`app ${theme}`}>
+          <button onClick={toggleTheme} className="toggle-btn">
+            Toggle to {theme === 'light' ? 'Dark' : 'Light'} Mode
+          </button>
+          <div className="box-container">
+            <ThemedBox theme={theme} text="Box 1: Hello!" />
+            <ThemedBox theme={theme} text="Box 2: React is great!" />
+            <ThemedBox theme={theme} text="Box 3: Theme toggled!" />
+          </div>
+        </div>
+      );
+    };
+
+
+    ReactDOM.render(<ThemeApp />, document.getElementById('root'));
+  </script>
+</body>
+</html>
