@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React toggle button</title>
+</head>
+<body>
+    <div id="root"></div>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+        const {useState}=React;
+
+        function ToggleButton({label=" "}){
+            const [isOn,setIsOn]=useState(false);
+            const toggle=()=>setIsOn(prev=>!prev)
+            return (
+                <div className="toggle-wrapper">
+                    {label&&<span>{label}</span>}
+                    <button onClick={toggle}className={isOn?"on":"off"}>
+                        {isOn?"ON":"OFF"}
+                        </button>
+                    </div>
+            );
+        }
+        function App(){
+            return (
+                <div>
+                    <h1>React toggle button</h1>
+                    <ToggleButton label="Power:"/>
+                    <br />
+                    <ToggleButton label="Switch:" />
+          <br />
+          <ToggleButton />
+                    </div>
+            )
+        }
+        const root=ReactDOM.createRoot(document.getElementById("root"));
+        root.render(<App/>);
+    </script>
+</body>
+</html>
