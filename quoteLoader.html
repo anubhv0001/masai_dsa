@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Daily Quote Viewer</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #f9f9f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .quote-box {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 600px;
+      text-align: center;
+    }
+
+    .quote {
+      font-size: 1.5rem;
+      font-style: italic;
+      margin-bottom: 15px;
+    }
+
+    .author {
+      font-size: 1rem;
+      color: #555;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      background: #007BFF;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const QuoteViewer = () => {
+      const [quote, setQuote] = useState(null);
+      const [loading, setLoading] = useState(true);
+
+      const fetchQuote = async () => {
+        try {
+          setLoading(true);
+          const res = await fetch('https://api.quotable.io/random');
+          const data = await res.json();
+          setQuote(data);
+          setLoading(false);
+        } catch (error) {
+          setQuote({ content: 'Failed to fetch quote.', author: 'Error' });
+          setLoading(false);
+        }
+      };
+
+      useEffect(() => {
+        fetchQuote();
+        const interval = setInterval(fetchQuote, 30000); 
+        return () => clearInterval(interval);
+      }, []);
+
+      return (
+        <div className="quote-box">
+          {loading ? (
+            <p>Loading...</p>
+          ) : (
+            <React.Fragment>
+              <div className="quote">“{quote.content}”</div>
+              <div className="author">— {quote.author}</div>
+            </React.Fragment>
+          )}
+          <button onClick={fetchQuote}>Get New Quote</button>
+        </div>
+      );
+    };
+
+    ReactDOM.render(<QuoteViewer />, document.getElementById('root'));
+  </script>
+</body>
+</html>
+
