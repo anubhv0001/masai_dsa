@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>React Profile Card</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      padding: 20px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 16px;
+      max-width: 300px;
+      margin: 20px auto;
+    }
+
+    .name {
+      font-size: 1.5em;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .age {
+      color: #666;
+      margin-bottom: 12px;
+    }
+
+    .bio {
+      color: #333;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <!-- React + Babel -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script type="text/babel">
+    const ProfileCard = ({
+      name = "Anshika Singh",
+      age,
+      bio = "Anshika will become PCS officer one day for sure."
+    }) => {
+      const truncatedBio = bio.length > 100
+        ? bio.substring(0, 100) + "… Read More"
+        : bio;
+
+      return (
+        <div className="card">
+          <div className="name">{name}</div>
+          <div className="age">Age: {age}</div>
+          <div className="bio">{truncatedBio}</div>
+        </div>
+      );
+    };
+
+    const App = () => {
+      return (
+        <div>
+          <ProfileCard
+            name="Alice Johnson"
+            age={28}
+            bio="Alice is a front-end developer with 5+ years of experience in React and Angular. She loves clean code and UI/UX design."
+          />
+
+          <ProfileCard
+            age={21} 
+          />
+        </div>
+      );
+    };
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
