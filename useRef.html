@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>useRef Focus Example</title>
+
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #1e1e1e;
+            color: #fff;
+            text-align: center;
+            margin-top: 100px;
+        }
+
+        input {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            outline: none;
+            width: 250px;
+            transition: background-color 0.3s ease;
+        }
+
+        button {
+            margin-left: 10px;
+            padding: 10px 15px;
+            background: #61dafb;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #4fc3f7;
+        }
+
+        p {
+            margin-top: 15px;
+            font-size: 18px;
+            color: #61dafb;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>useRef Focus Example</h1>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useRef, useState } = React;
+
+        const FocusInput = () => {
+            const inputRef = useRef(null);
+            const [focused, setFocused] = useState(false);
+
+            const handleFocus = () => {
+                inputRef.current.focus();
+                inputRef.current.style.backgroundColor = "#d1f7c4";
+                setFocused(true);
+            };
+
+            return (
+                <div>
+                    <input ref={inputRef} type="text" placeholder="Click the button to focus me" />
+                    <button onClick={handleFocus}>Focus Input</button>
+                    {focused && <p>Focused!</p>}
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById("root"));
+        root.render(<FocusInput />);
+    </script>
+</body>
+
+</html>
