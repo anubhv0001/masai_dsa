@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Understanding useReducer in React</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        transition: background-color 0.3s, color 0.3s;
+        text-align: center;
+        padding-top: 80px;
+      }
+
+      .container {
+        padding: 40px;
+        border-radius: 12px;
+        width: 300px;
+        margin: auto;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        margin-top: 20px;
+      }
+
+      .light {
+        background-color: #f0f0f0;
+        color: #333;
+      }
+
+      .light button {
+        background-color: #333;
+        color: white;
+      }
+
+      .dark {
+        background-color: #222;
+        color: #f0f0f0;
+      }
+
+      .dark button {
+        background-color: #f0f0f0;
+        color: #222;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const { useReducer } = React;
+      function themeReducer(state, action) {
+        switch (action.type) {
+          case "TOGGLE_THEME":
+            return {
+              theme: state.theme === "light" ? "dark" : "light",
+            };
+          default:
+            return state;
+        }
+      }
+      const ThemeToggleApp = () => {
+        const [state, dispatch] = useReducer(themeReducer, { theme: "light" });
+
+        const toggleTheme = () => {
+          dispatch({ type: "TOGGLE_THEME" });
+        };
+
+        return (
+          <div className={`container ${state.theme}`}>
+            <h1>useReducer Theme Toggle</h1>
+            <p>Current Theme: <strong>{state.theme}</strong></p>
+            <button onClick={toggleTheme}>Toggle Theme</button>
+          </div>
+        );
+      };
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(<ThemeToggleApp />);
+    </script>
+  </body>
+</html>
