@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Chakra UI Card Component</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script src="https://unpkg.com/@chakra-ui/react@2.8.2/dist/chakra-ui-react.umd.min.js"></script>
+    <script src="https://unpkg.com/@emotion/react@11.11.1/dist/emotion-react.umd.min.js"></script>
+    <script src="https://unpkg.com/@emotion/styled@11.11.0/dist/emotion-styled.umd.min.js"></script>
+    <script src="https://unpkg.com/framer-motion@10.18.0/dist/framer-motion.umd.js"></script>
+
+    <style>
+      body {
+        margin: 0;
+        background: #f7fafc;
+        font-family: "Segoe UI", sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const {
+        ChakraProvider,
+        Box,
+        Image,
+        Text,
+        Heading,
+        VStack,
+        Container,
+        useColorModeValue,
+      } = window["@chakra-ui/react"];
+
+      function CardComponent() {
+        const bg = useColorModeValue("white", "gray.800");
+        const shadow = useColorModeValue("md", "dark-lg");
+
+        return (
+          <Box
+            bg={bg}
+            borderRadius="lg"
+            boxShadow={shadow}
+            maxW="sm"
+            mx="auto"
+            mt={10}
+            p={5}
+            _hover={{ transform: "scale(1.03)", transition: "0.3s" }}
+          >
+            <VStack spacing={4} textAlign="center">
+              <Heading size="md" color="teal.500">
+                Nature's Beauty
+              </Heading>
+
+              <Image
+                src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80"
+                alt="Nature"
+                borderRadius="md"
+                boxShadow="md"
+              />
+
+              <Text color="gray.600" fontSize="md">
+                Discover the serene beauty of untouched nature. This card
+                component is built using Chakra UI and is fully responsive with
+                rounded corners, shadow, and hover effects.
+              </Text>
+            </VStack>
+          </Box>
+        );
+      }
+
+      function App() {
+        return (
+          <ChakraProvider>
+            <Container centerContent>
+              <Heading mt={8} color="teal.600">
+                Chakra UI Card Demo
+              </Heading>
+              <CardComponent />
+            </Container>
+          </ChakraProvider>
+        );
+      }
+      ReactDOM.render(<App />, document.getElementById("root"));
+    </script>
+  </body>
+</html>
