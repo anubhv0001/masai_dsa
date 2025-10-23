@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Responsive UI Using Chakra UI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script src="https://unpkg.com/@chakra-ui/react@2.8.2/dist/chakra-ui-react.umd.min.js"></script>
+    <script src="https://unpkg.com/@emotion/react@11.11.1/dist/emotion-react.umd.min.js"></script>
+    <script src="https://unpkg.com/@emotion/styled@11.11.0/dist/emotion-styled.umd.min.js"></script>
+    <script src="https://unpkg.com/framer-motion@10.18.0/dist/framer-motion.umd.js"></script>
+
+    <style>
+      body {
+        margin: 0;
+        background-color: #f7fafc;
+        font-family: "Segoe UI", sans-serif;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const {
+        ChakraProvider,
+        Box,
+        Flex,
+        Heading,
+        Button,
+        Image,
+        Text,
+        Stack,
+        SimpleGrid,
+        useColorModeValue,
+      } = window["@chakra-ui/react"];
+
+      // Navbar
+      function Navbar() {
+        return (
+          <Flex
+            bg="teal.500"
+            color="white"
+            p={4}
+            align="center"
+            justify="space-between"
+            wrap="wrap"
+          >
+            <Heading size="md">🌿 My Responsive App</Heading>
+            <Stack
+              direction={{ base: "column", md: "row" }}
+              spacing={{ base: 2, md: 4 }}
+              mt={{ base: 2, md: 0 }}
+            >
+              <Button colorScheme="teal" variant="outline" size="sm">
+                Home
+              </Button>
+              <Button colorScheme="teal" variant="outline" size="sm">
+                About
+              </Button>
+              <Button colorScheme="teal" variant="outline" size="sm">
+                Contact
+              </Button>
+            </Stack>
+          </Flex>
+        );
+      }
+
+      function InfoCard({ title, img, desc }) {
+        const bg = useColorModeValue("white", "gray.700");
+        const shadow = useColorModeValue("md", "dark-lg");
+
+        return (
+          <Box
+            bg={bg}
+            boxShadow={shadow}
+            borderRadius="lg"
+            p={5}
+            textAlign="center"
+            _hover={{ transform: "scale(1.03)", transition: "0.3s" }}
+          >
+            <Image
+              src={img}
+              alt={title}
+              borderRadius="md"
+              mx="auto"
+              mb={3}
+              maxH="150px"
+              objectFit="cover"
+            />
+            <Heading size="md" mb={2} color="teal.600">
+              {title}
+            </Heading>
+            <Text color="gray.600" fontSize="sm">
+              {desc}
+            </Text>
+            <Button mt={3} colorScheme="teal" size="sm">
+              Learn More
+            </Button>
+          </Box>
+        );
+      }  
+
+      function ResponsiveLayout() {
+        return (
+          <Box p={{ base: 4, md: 8 }}>
+            <Navbar />
+            <Box textAlign="center" mt={8}>
+              <Heading color="teal.600" mb={4}>
+                Responsive Layout Using Chakra UI
+              </Heading>
+              <Text fontSize="lg" color="gray.600" mb={6}>
+                Resize your browser window to see how the layout adapts to mobile,
+                tablet, and desktop views.
+              </Text>
+            </Box>
+
+            <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={6} mt={4}>
+              <InfoCard
+                title="Nature"
+                img="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80"
+                desc="Experience the beauty of nature with vibrant landscapes and peaceful vibes."
+              />
+              <InfoCard
+                title="Adventure"
+                img="https://images.unsplash.com/photo-1526481280690-7b35703f5222?auto=format&fit=crop&w=400&q=80"
+                desc="Embark on adventures that take you beyond the ordinary and into the wild."
+              />
+              <InfoCard
+                title="Culture"
+                img="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=400&q=80"
+                desc="Immerse yourself in diverse cultures, traditions, and unique experiences."
+              />
+            </SimpleGrid>
+          </Box>
+        );
+      }
+      function App() {
+        return (
+          <ChakraProvider>
+            <ResponsiveLayout />
+          </ChakraProvider>
+        );
+      }
+
+      ReactDOM.render(<App />, document.getElementById("root"));
+    </script>
+  </body>
+</html>
