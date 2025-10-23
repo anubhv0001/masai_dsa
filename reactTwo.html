@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Redux Todo with Chakra UI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  
+
+  <script src="https://unpkg.com/redux@4.2.1/dist/redux.js"></script>
+  
+  <script src="https://unpkg.com/react-redux@8.1.1/dist/react-redux.js"></script>
+  
+
+  <script src="https://unpkg.com/@chakra-ui/react@2.8.2/dist/chakra-ui-react.umd.min.js"></script>
+  <script src="https://unpkg.com/@emotion/react@11.11.1/dist/emotion-react.umd.min.js"></script>
+  <script src="https://unpkg.com/@emotion/styled@11.11.0/dist/emotion-styled.umd.min.js"></script>
+  <script src="https://unpkg.com/framer-motion@10.18.0/dist/framer-motion.umd.js"></script>
+  
+
+  <script src="https://unpkg.com/@chakra-ui/icons@2.0.17/dist/chakra-ui-icons.umd.min.js"></script>
+
+
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      background-color: #f7fafc;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+
+    const {
+      ChakraProvider,
+      Box,
+      Heading,
+      Input,
+      Button,
+      VStack,
+      HStack,
+      Checkbox,
+      Text,
+      IconButton,
+      useColorModeValue,
+    } = window.ChakraUIReact;
+
+    const { DeleteIcon } = window.ChakraUIIcons;
+
+    const { createStore } = window.Redux;
+    const { Provider, useDispatch, useSelector } = window.ReactRedux;
+    const React = window.React;
+    const ReactDOM = window.ReactDOM;
+
+    const ADD_TODO = "ADD_TODO";
+    const TOGGLE_TODO = "TOGGLE_TODO";
+    const DELETE_TODO = "DELETE_TODO";
+
+    const addTodo = (title) => ({
+      type: ADD_TODO,
+      payload: { title },
+    });
+
+    const toggleTodo = (id) => ({
+      type: TOGGLE_TODO,
+      payload: { id },
+    });
+
+    const deleteTodo = (id) => ({
+      type: DELETE_TODO,
+      payload: { id },
+    });
+
+    const initialState = {
+      todos: [],
+    };
+    function todoReducer(state = initialState, action) {
+      switch (action.type) {
+        case ADD_TODO: {
+          const newTodo = {
+            id: Date.now().toString(),
+            title: action.payload.title,
+            status: false,
+          };
+          return { ...state, todos: [...state.todos, newTodo] };
+        }
+        case TOGGLE_TODO: {
+          const updatedTodos = state.todos.map((todo) =>
+            todo.id === action.payload.id ? { ...todo, status: !todo.status } : todo
+          );
+          return { ...state, todos: updatedTodos };
+        }
+        case DELETE_TODO: {
+          const filteredTodos = state.todos.filter((todo) => todo.id !== action.payload.id);
+          return { ...state, todos: filteredTodos };
+        }
+        default:
+          return state;
+      }
+    }
+
+    
+    const store = createStore(todoReducer);
+    function TodoApp() {
+      const dispatch = useDispatch();
+      const todos = useSelector((state) => state.todos);
+
+      const [input, setInput] = React.useState("");
+
+      const handleAddTodo = () => {
+        if (input.trim() === "") return;
+        dispatch(addTodo(input));
+        setInput("");
+      };
+
+      return (
+        <Box maxW="md" mx="auto" mt={10} p={6} borderWidth={1} borderRadius="lg" boxShadow="md" bg={useColorModeValue("white", "gray.700")}>
+          <Heading mb={6} color="teal.600" textAlign="center">
+            Todo List with Redux & Chakra UI
+          </Heading>
+
+          <HStack mb={4}>
+            <Input
+              placeholder="Add new todo..."
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleAddTodo()}
+            />
+            <Button colorScheme="teal" onClick={handleAddTodo}>
+              Add
+            </Button>
+          </HStack>
+
+          <VStack spacing={3} align="stretch">
+            {todos.length === 0 && <Text textAlign="center" color={useColorModeValue("gray.600", "gray.300")}>No todos yet! Add some.</Text>}
+            {todos.map(({ id, title, status }) => (
+              <HStack
+                key={id}
+                justifyContent="space-between"
+                bg={status ? "green.50" : "gray.50"}
+                p={3}
+                borderRadius="md"
+                _hover={{ bg: status ? "green.100" : "gray.100" }}
+              >
+                <Checkbox isChecked={status} onChange={() => dispatch(toggleTodo(id))}>
+                  <Text as={status ? "s" : undefined} color={status ? "gray.500" : undefined}>{title}</Text>
+                </Checkbox>
+                <IconButton
+                  icon={<DeleteIcon />}
+                  colorScheme="red"
+                  size="sm"
+                  aria-label="Delete todo"
+                  onClick={() => dispatch(deleteTodo(id))}
+                />
+              </HStack>
+            ))}
+          </VStack>
+        </Box>
+      );
+    }
+    ReactDOM.createRoot(document.getElementById("root")).render(
+      <Provider store={store}>
+        <ChakraProvider>
+          <TodoApp />
+        </ChakraProvider>
+      </Provider>
+    );
+
+  </script>
+</body>
+</html>
