@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>React useToggleItems Custom Hook</title>
+
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+
+
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background-color: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .app {
+      background: #fff;
+      padding: 30px 50px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    h1 {
+      font-size: 2rem;
+      color: #333;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin-top: 20px;
+      font-size: 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    function useToggleItems(initialValue = [], initialPosition = 0) {
+      const [currentIndex, setCurrentIndex] = React.useState(initialPosition);
+
+      const toggleState = () => {
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % initialValue.length);
+      };
+      return [initialValue[currentIndex], toggleState];
+    }
+    function App() {
+      const [item, toggleItem] = useToggleItems(["A", "B", "C", "D"], 1);
+
+      return (
+        <div className="app">
+          <h1>🔁 useToggleItems Hook</h1>
+          <h2>Current Item: {item}</h2>
+          <button onClick={toggleItem}>Next Item</button>
+        </div>
+      );
+    }
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App />);
+
+  </script>
+</body>
+</html>
