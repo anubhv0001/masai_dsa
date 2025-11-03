@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>React useTimer Custom Hook</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background-color: #f5f6fa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .timer-container {
+      background: white;
+      padding: 30px 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    h1 {
+      font-size: 2rem;
+      color: #333;
+    }
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    function useTimer() {
+      const [timer, setTimer] = React.useState(0);
+      const [isRunning, setIsRunning] = React.useState(false);
+      const intervalRef = React.useRef(null);
+      const startTimer = () => {
+        if (!isRunning) {
+          setIsRunning(true);
+          intervalRef.current = setInterval(() => {
+            setTimer((prev) => prev + 1);
+          }, 1000);
+        }
+      };
+
+      const stopTimer = () => {
+        clearInterval(intervalRef.current);
+        setIsRunning(false);
+      };
+
+      const resetTimer = () => {
+        clearInterval(intervalRef.current);
+        setTimer(0);
+        setIsRunning(false);
+      };
+      React.useEffect(() => {
+        return () => clearInterval(intervalRef.current);
+      }, []);
+
+      return { timer, isRunning, startTimer, stopTimer, resetTimer };
+    }
+    function TimerApp() {
+      const { timer, isRunning, startTimer, stopTimer, resetTimer } = useTimer();
+
+      return (
+        <div className="timer-container">
+          <h1> Timer: {timer} seconds</h1>
+          <div>
+            <button onClick={startTimer} disabled={isRunning}>Start</button>
+            <button onClick={stopTimer} disabled={!isRunning}>Stop</button>
+            <button onClick={resetTimer}>Reset</button>
+          </div>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<TimerApp />);
+
+  </script>
+</body>
+</html>
