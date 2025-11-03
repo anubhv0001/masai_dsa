@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>React Custom Hook Example</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    body {
+      font-family: Arial;
+      padding: 20px;
+      background: #f6f6f6;
+    }
+    input {
+      padding: 8px;
+      margin: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      padding: 6px 12px;
+      margin: 4px;
+      border: none;
+      background: #007bff;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    function useCounter(initialValue = 0) {
+      const [count, setCount] = React.useState(initialValue);
+
+      const increment = () => setCount(prev => prev + 1);
+      const decrement = () => setCount(prev => prev - 1);
+      const reset = () => setCount(initialValue);
+
+      return { count, increment, decrement, reset };
+    }
+    function CounterComponent() {
+      const { count, increment, decrement, reset } = useCounter(0);
+
+      return (
+        <div style={{ background: "#fff", padding: "20px", borderRadius: "8px", maxWidth: "300px" }}>
+          <h2>Custom Hook Counter</h2>
+          <h3>Count: {count}</h3>
+          <button onClick={increment}>+</button>
+          <button onClick={decrement}>-</button>
+          <button onClick={reset}>Reset</button>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<CounterComponent />);
+  </script>
+</body>
+</html>
